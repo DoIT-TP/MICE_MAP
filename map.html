@@ -16,44 +16,66 @@
             overflow: hidden;
         }
 
+        #container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        #button-container {
+            padding: 10px;
+            text-align: center;
+        }
+
         #map {
-            height: 80vh;
-            /* 或您想要的高度設置 */
+            flex-grow: 1;
             width: 100%;
         }
 
-        .card-title {
-            margin-top: 0;
-            margin-bottom: 0;
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
         }
 
-        .card-text {
-            margin-top: 0;
-            margin-bottom: 0;
+        @media (max-width: 768px) {
+            #button-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            button {
+                flex: 1 1 auto;
+                min-width: 100px;
+                margin: 5px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div id="map"></div>
-    <button
-        onclick="loadTour('濕地協會特色遊程- 百年古蹟文化城，剝皮寮懷舊之旅.csv','#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png')">百年古蹟文化城，剝皮寮懷舊之旅</button>
-    <button
-        onclick="loadTour('濕地協會特色遊程- 水道水源地之旅(臺北水旅行).csv', '#00FF00', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png')">水道水源地之旅(臺北水旅行)</button>
-    <button
-        onclick="loadTour('濕地協會特色遊程- 走靜貓空，踏青一日遊.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png')">走靜貓空，踏青一日遊</button>
-    <button
-        onclick="loadTour('濕地協會特色遊程- 穿越時光，探索台北城之旅.csv', '#FFFF00', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')">穿越時光，探索台北城之旅</button>
-    <button
-        onclick="loadTour('濕地協會特色遊程- 紓壓放鬆輕旅行.csv', '#FF00FF', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png')">紓壓放鬆輕旅行</button>
+    <div id="container">
+        <div id="button-container">
+            <button
+                onclick="loadTour('濕地協會特色遊程- 百年古蹟文化城，剝皮寮懷舊之旅.csv','#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png')">百年古蹟文化城，剝皮寮懷舊之旅</button>
+            <button
+                onclick="loadTour('濕地協會特色遊程- 水道水源地之旅(臺北水旅行).csv', '#00FF00', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png')">水道水源地之旅(臺北水旅行)</button>
+            <button
+                onclick="loadTour('濕地協會特色遊程- 走靜貓空，踏青一日遊.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png')">走靜貓空，踏青一日遊</button>
+            <button
+                onclick="loadTour('濕地協會特色遊程- 穿越時光，探索台北城之旅.csv', '#FFFF00', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')">穿越時光，探索台北城之旅</button>
+            <button
+                onclick="loadTour('濕地協會特色遊程- 紓壓放鬆輕旅行.csv', '#FF00FF', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png')">紓壓放鬆輕旅行</button>
+        </div>
+        <div id="map"></div>
+    </div>
 
     <script>
         let map;
         let markers = []; // Array to store all map markers
         let polylinePaths = []; // Array to store all polylines drawn on the map
         let currentPolyline; // Currently active polyline
-        let directionsService; // Service for calculating routes
-        let directionsRenderer; // Renderer for displaying routes
 
         function initMap() {
             // Initialize the Google Map with specified center and zoom level
@@ -61,9 +83,6 @@
                 center: { lat: 25.0330, lng: 121.5654 },
                 zoom: 12
             });
-            directionsService = new google.maps.DirectionsService();
-            directionsRenderer = new google.maps.DirectionsRenderer();
-            directionsRenderer.setMap(map);
         }
 
         function loadTour(csvFile, polylineColor, markerIcon) {
@@ -86,7 +105,6 @@
 
         function plotLocations(data, polylineColor, markerIcon) {
             let polylineCoordinates = []; // Array to store coordinates for drawing the polyline
-            let geocodeCount = 0; // Counter to keep track of geocoding process
             const geocoder = new google.maps.Geocoder(); // Geocoder service for converting addresses to coordinates
 
             // Use reduce to process geocoding sequentially to maintain the order of locations
@@ -94,7 +112,6 @@
                 return promise.then(() => {
                     return new Promise((resolve, reject) => {
                         let address = location['PlusCodes'] || location['地址']; // Use PlusCodes if available, otherwise use address
-                        let website = location['網址']; // Website URL for the location
                         let id = location['編號']; // Unique ID for the location
 
                         // Geocode the address to get latitude and longitude
@@ -111,8 +128,7 @@
 
                                 // Label the first marker with '起點' and add animation effect
                                 if (index === 0) {
-                                    const startIcon = 'http://maps.google.com/mapfiles/kml/paddle/1.png'; // Use star icon for start point
-                                    marker.setIcon(startIcon);
+                                    marker.setIcon('http://maps.google.com/mapfiles/kml/paddle/1.png');
                                     marker.setAnimation(google.maps.Animation.BOUNCE); // Add bounce animation
                                     marker.setLabel({
                                         text: '起點',
@@ -124,31 +140,6 @@
 
                                 // Add the location to polyline coordinates array
                                 polylineCoordinates.push(results[0].geometry.location);
-
-                                // Create an info window with location details
-                                let infoWindowContent = `<h3>${id}: ${location['景點名稱']}</h3><p>${address}</p>`;
-                                if (website) {
-                                    infoWindowContent += `<p><a href="${website}" target="_blank">查看更多資訊</a></p>`;
-                                }
-
-                                const infoWindow = new google.maps.InfoWindow({
-                                    content: infoWindowContent
-                                });
-
-                                // Add a click listener to the marker to show the info window and draw polyline
-                                marker.addListener('click', () => {
-                                    infoWindow.open(map, marker);
-                                    // Draw polyline from current marker to the next one if available
-                                    if (index < polylineCoordinates.length - 1) {
-                                        drawPolyline([polylineCoordinates[index], polylineCoordinates[index + 1]], polylineColor);
-                                    }
-                                });
-
-                                geocodeCount++;
-                                // Once all locations are geocoded, draw the initial polyline
-                                if (geocodeCount === data.length) {
-                                    drawInitialPolyline(polylineCoordinates, polylineColor);
-                                }
                                 resolve();
                             } else {
                                 console.error(`Geocode failed for address: ${address}, status: ${status}`);
@@ -157,30 +148,13 @@
                         });
                     });
                 });
-            }, Promise.resolve());
-        }
-
-        function drawInitialPolyline(coordinates, color) {
-            // Draw the initial polyline connecting the first two locations
-            if (coordinates.length >= 2) {
-                const initialPath = [coordinates[0], coordinates[1]];
-                currentPolyline = new google.maps.Polyline({
-                    path: initialPath,
-                    geodesic: true,
-                    strokeColor: color,
-                    strokeOpacity: 1.0,
-                    strokeWeight: 2
-                });
-                currentPolyline.setMap(map);
-                polylinePaths.push(currentPolyline);
-            }
+            }, Promise.resolve()).then(() => {
+                // Once all locations are geocoded, draw the polyline
+                drawPolyline(polylineCoordinates, polylineColor);
+            });
         }
 
         function drawPolyline(coordinates, color) {
-            // Clear the current polyline if one exists
-            if (currentPolyline) {
-                currentPolyline.setMap(null);
-            }
             // Draw a new polyline with the specified coordinates and color
             currentPolyline = new google.maps.Polyline({
                 path: coordinates,
@@ -201,15 +175,11 @@
             // Clear all polylines from the map
             polylinePaths.forEach(path => path.setMap(null));
             polylinePaths = [];
-
-            // Clear directions from the map
-            directionsRenderer.set('directions', null);
         }
 
         // Initialize the map when the window loads
         window.onload = initMap;
     </script>
-
 </body>
 
 </html>
