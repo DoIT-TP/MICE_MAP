@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>旅遊路線地圖</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqEBoy8tcL8KyNHwKSPPWmOZ3L7w1dWJg&libraries=places"></script>
 </head>
 <body>
     <select id="routeSelect">
@@ -39,7 +39,7 @@
         // 讀取 CSV 檔案
         async function loadLocationsData() {
             try {
-                const response = await fetch('bs-map.csv');
+                const response = await fetch('./csv/st.csv');
                 const data = await response.text();
                 const rows = data.split('\n');
                 rows.forEach(row => {
@@ -58,7 +58,7 @@
         // 監聽路線選擇
         document.getElementById("routeSelect").addEventListener("change", function () {
             const districtSelect = document.getElementById("districtSelect");
-            districtSelect.innerHTML = `<option value="">請先選擇商圈</option>`;
+            districtSelect.innerHTML = `<option value="">請先選擇商家</option>`;
             const selectedRoute = this.value;
 
             if (!selectedRoute) {
