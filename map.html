@@ -69,7 +69,7 @@
         function loadTour(csvFile, polylineColor, markerIcon) {
             // Clear existing markers and polylines before loading new tour
             clearMap();
-            fetch('csv/' + csvFile)
+            fetch('./csv/' + csvFile)
                 .then(response => response.text())
                 .then(csvData => {
                     // Parse CSV data using PapaParse library
