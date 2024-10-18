@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>旅遊路線地圖</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqEBoy8tcL8KyNHwKSPPWmOZ3L7w1dWJg&libraries=places"></script>
 </head>
 <body>
     <select id="routeSelect">
@@ -16,7 +16,7 @@
         <option value="水道水源地之旅(臺北水旅行)">水道水源地之旅(臺北水旅行)</option>
     </select>
     <select id="districtSelect" disabled>
-        <option value="">請先選擇商圈</option>
+        <option value="">請先選擇旅遊路線</option>
     </select>
     <div id="map" style="height: 500px; width: 100%;"></div>
 
@@ -39,7 +39,7 @@
         // 讀取 CSV 檔案
         async function loadLocationsData() {
             try {
-                const response = await fetch('bs-map.csv');
+                const response = await fetch('./csv/st.csv');
                 const data = await response.text();
                 const rows = data.split('\n');
                 rows.forEach(row => {
@@ -57,9 +57,8 @@
 
         // 監聽路線選擇
         document.getElementById("routeSelect").addEventListener("change", function () {
-            clearMarkers(); // 清除先前的標記
             const districtSelect = document.getElementById("districtSelect");
-            districtSelect.innerHTML = `<option value="">請先選擇商圈</option>`;
+            districtSelect.innerHTML = `<option value="">請先選擇商家</option>`;
             const selectedRoute = this.value;
 
             if (!selectedRoute) {
@@ -79,7 +78,6 @@
 
         // 監聽商圈選擇
         document.getElementById("districtSelect").addEventListener("change", function () {
-            clearMarkers(); // 清除先前的標記
             const selectedRoute = document.getElementById("routeSelect").value;
             const selectedDistrictIndex = this.value;
             if (selectedRoute && selectedDistrictIndex !== "") {
@@ -96,7 +94,6 @@
                 if (status === google.maps.GeocoderStatus.OK) {
                     const latLng = results[0].geometry.location;
                     placeMarker(latLng, location);
-                    map.setCenter(latLng); // 將地圖中心移動到選擇的商家
                 } else {
                     console.error('Geocode was not successful for the following reason: ' + status);
                 }
