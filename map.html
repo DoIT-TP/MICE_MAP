@@ -24,13 +24,14 @@
 
     <script>
         let map;
-        let markers = [];
-        let polylinePaths = [];
-        let currentPolyline;
-        let directionsService;
-        let directionsRenderer;
+        let markers = []; // Array to store all map markers
+        let polylinePaths = []; // Array to store all polylines drawn on the map
+        let currentPolyline; // Currently active polyline
+        let directionsService; // Service for calculating routes
+        let directionsRenderer; // Renderer for displaying routes
 
         function initMap() {
+            // Initialize the Google Map with specified center and zoom level
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: 25.0330, lng: 121.5654 },
                 zoom: 12
@@ -41,14 +42,17 @@
         }
 
         function loadTour(csvFile, polylineColor, markerIcon) {
+            // Clear existing markers and polylines before loading new tour
             clearMap();
-            fetch(csvFile)
+            fetch('csv/' + csvFile)
                 .then(response => response.text())
                 .then(csvData => {
+                    // Parse CSV data using PapaParse library
                     Papa.parse(csvData, {
                         header: true,
                         dynamicTyping: true,
                         complete: function (results) {
+                            // Plot the locations from the parsed CSV data
                             plotLocations(results.data, polylineColor, markerIcon);
                         }
                     });
@@ -56,19 +60,22 @@
         }
 
         function plotLocations(data, polylineColor, markerIcon) {
-            let polylineCoordinates = [];
-            let geocodeCount = 0;
-            const geocoder = new google.maps.Geocoder();
+            let polylineCoordinates = []; // Array to store coordinates for drawing the polyline
+            let geocodeCount = 0; // Counter to keep track of geocoding process
+            const geocoder = new google.maps.Geocoder(); // Geocoder service for converting addresses to coordinates
 
+            // Use reduce to process geocoding sequentially to maintain the order of locations
             data.reduce((promise, location, index) => {
                 return promise.then(() => {
                     return new Promise((resolve, reject) => {
-                        let address = location['PlusCodes'] || location['地址'];
-                        let website = location['網址'];
-                        let id = location['編號'];
+                        let address = location['PlusCodes'] || location['地址']; // Use PlusCodes if available, otherwise use address
+                        let website = location['網址']; // Website URL for the location
+                        let id = location['編號']; // Unique ID for the location
 
+                        // Geocode the address to get latitude and longitude
                         geocoder.geocode({ 'address': address }, function (results, status) {
                             if (status === 'OK') {
+                                // Create a marker for the location
                                 const marker = new google.maps.Marker({
                                     position: results[0].geometry.location,
                                     map: map,
@@ -77,12 +84,23 @@
                                 });
                                 markers.push(marker);
 
+                                // Label the first marker with '起點' and add animation effect
                                 if (index === 0) {
-                                    marker.setLabel('No.1');
+                                    const startIcon = 'http://maps.google.com/mapfiles/kml/paddle/1.png'; // Use star icon for start point
+                                    marker.setIcon(startIcon);
+                                    marker.setAnimation(google.maps.Animation.BOUNCE); // Add bounce animation
+                                    marker.setLabel({
+                                        text: '起點',
+                                        color: 'black',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold'
+                                    });
                                 }
 
+                                // Add the location to polyline coordinates array
                                 polylineCoordinates.push(results[0].geometry.location);
 
+                                // Create an info window with location details
                                 let infoWindowContent = `<h3>${id}: ${location['景點名稱']}</h3><p>${address}</p>`;
                                 if (website) {
                                     infoWindowContent += `<p><a href="${website}" target="_blank">查看更多資訊</a></p>`;
@@ -91,21 +109,25 @@
                                 const infoWindow = new google.maps.InfoWindow({
                                     content: infoWindowContent
                                 });
+
+                                // Add a click listener to the marker to show the info window and draw polyline
                                 marker.addListener('click', () => {
                                     infoWindow.open(map, marker);
+                                    // Draw polyline from current marker to the next one if available
                                     if (index < polylineCoordinates.length - 1) {
                                         drawPolyline([polylineCoordinates[index], polylineCoordinates[index + 1]], polylineColor);
                                     }
                                 });
 
                                 geocodeCount++;
+                                // Once all locations are geocoded, draw the initial polyline
                                 if (geocodeCount === data.length) {
                                     drawInitialPolyline(polylineCoordinates, polylineColor);
                                 }
                                 resolve();
                             } else {
                                 console.error(`Geocode failed for address: ${address}, status: ${status}`);
-                                resolve();
+                                resolve(); // Resolve the promise even if geocoding fails to continue processing
                             }
                         });
                     });
@@ -114,6 +136,7 @@
         }
 
         function drawInitialPolyline(coordinates, color) {
+            // Draw the initial polyline connecting the first two locations
             if (coordinates.length >= 2) {
                 const initialPath = [coordinates[0], coordinates[1]];
                 currentPolyline = new google.maps.Polyline({
@@ -129,9 +152,11 @@
         }
 
         function drawPolyline(coordinates, color) {
+            // Clear the current polyline if one exists
             if (currentPolyline) {
                 currentPolyline.setMap(null);
             }
+            // Draw a new polyline with the specified coordinates and color
             currentPolyline = new google.maps.Polyline({
                 path: coordinates,
                 geodesic: true,
@@ -144,16 +169,19 @@
         }
 
         function clearMap() {
+            // Clear all markers from the map
             markers.forEach(marker => marker.setMap(null));
             markers = [];
 
+            // Clear all polylines from the map
             polylinePaths.forEach(path => path.setMap(null));
             polylinePaths = [];
 
+            // Clear directions from the map
             directionsRenderer.set('directions', null);
         }
 
-        // Initialize the map
+        // Initialize the map when the window loads
         window.onload = initMap;
     </script>
 
