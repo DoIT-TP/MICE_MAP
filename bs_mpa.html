@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅遊路線地圖</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=
+    AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q&libraries=places"></script>
+</head>
+<body>
+    <select id="routeSelect">
+        <option value="">請選擇旅遊路線</option>
+        <option value="偽出國，紓壓放鬆輕旅行">偽出國，紓壓放鬆輕旅行</option>
+        <option value="走靜貓空，踏青一日遊">走靜貓空，踏青一日遊</option>
+        <option value="穿越時光，探索台北城之旅">穿越時光，探索台北城之旅</option>
+        <option value="百年古蹟文化城，剝皮寮懷舊之旅">百年古蹟文化城，剝皮寮懷舊之旅</option>
+        <option value="水道水源地之旅(臺北水旅行)">水道水源地之旅(臺北水旅行)</option>
+    </select>
+    <select id="districtSelect" disabled>
+        <option value="">請先選擇旅遊路線</option>
+    </select>
+    <div id="map" style="height: 500px; width: 100%;"></div>
+
+    <script>
+        let map;
+        let directionsRenderer;
+        let markers = [];
+
+        const locationsData = {
+            "偽出國，紓壓放鬆輕旅行": [
+                {
+                    spotName: "新北投溫泉",
+                    lat: 25.136829,
+                    lng: 121.502705,
+                    description: "北投原為平埔族中的凱達格蘭族(Ketagalan)部落居住的地方，而北投即凱達格蘭語的女巫之住所，堪稱是臺北市的後花園。為打造新北投商圈品牌形象，從文化中尋找特色，以「女巫、溫泉、古樸」等文化及環境特色作為形象，並陸續以「北投溫泉季、溫泉旅展、溫泉美食…」等議題，成功置入商圈各項行銷活動中。新北投溫泉在日治時代就頗負盛名，不僅僅是熱門的聚會點，更是那卡西的發源地，在民國 50、60 年代，紅極一時。當時溫泉旅社林立，隨著環境變遷，逐漸隱沒。近年在政府規劃下，又重新找回了生命力。這裡有臺灣最老的浴池，最具代表性的溫泉建築，不需刻意營造懷舊風情，這裡本身就有濃濃的復古風味。",
+                    imageUrl: "https://example.com/beitou_hot_spring.jpg"
+                }
+            ],
+            "走靜貓空，踏青一日遊": [
+                {
+                    spotName: "貓空商圈",
+                    lat: 24.960699,
+                    lng: 121.604056,
+                    description: "貓空屬台北最易親近之郊山地區，漫步於樟樹、樟湖、指南宮親山步道間，可觀察到許多北臺灣中低海拔區域可見之生態資源，如木賊、斯文豪氏大蝸牛、斯文豪氏青蛙、攀木蜥蜴等，適合學校校外教學。地方文史資源豐富，由周邊的優人神鼓山上劇場、表演36房及政治大學構成藝術三角洲，形成貓空特有文化旅遊路線。搭乘觀光纜車到山上，沿路可見鐵觀音茶園及創意茶坊林立，多具特色，除品茗賞景外，還可體驗植物敲拓染及藍染等手作，素有臺北後花園之稱，為臺北市民及遊客休閒放鬆好去處。",
+                    imageUrl: "https://example.com/maokong.jpg"
+                },
+                {
+                    spotName: "臺大公館商圈",
+                    lat: 25.014942,
+                    lng: 121.534671,
+                    description: "因應臺灣大學週邊而起的臺大公館商圈，各種小吃美食、人文咖啡館、二手書店等特色店家為其最知名之處，也成為年輕學子的最愛。另像是自來水博物館、新店溪自行車道、客家文物館、水源市場，更加強了「樂活‧水岸‧休閒」的特色，寶藏巖共生聚落，目前進駐許多藝術家及創意工作者，同時也進行商圈特色店家改造，依店家特色以創意元素導入呈現更多元的特色，吸引更多消費者到公館遊玩消費。",
+                    imageUrl: "https://example.com/taida_gongguan.jpg"
+                }
+            ],
+            "穿越時光，探索台北城之旅": [
+                {
+                    spotName: "五分埔商圈",
+                    lat: 25.050451,
+                    lng: 121.578790,
+                    description: "臺灣流行時尚界的朝聖之地－五分埔服飾商圈，交通動線四通八達、商品多元化，吸引許多批發客前往採購。主要以女性服飾、皮件及鞋子販售為主，近年來擁有自我設計的鞋店、潮Ｔ店及型男服飾店，猶如雨後春筍般出現，商品往往走在流行尖端，吸引不少時髦的消費者，過年前夕更是擠滿了逛街的人潮。",
+                    imageUrl: "https://example.com/wufenpu.jpg"
+                },
+                {
+                    spotName: "民生社區商圈",
+                    lat: 25.058146,
+                    lng: 121.548241,
+                    description: "民生社區商圈以民生東路與三民路交叉之圓環為中心，沿街商店住宅分佈於民生東路、三民路、新中街、撫遠街、新東街、民權東路主要幹道。店家類型多元完整，包含知名咖啡廳、特色餐廳、文創小店、補習班及才藝班等，屬於優質的社區型商圈，也因社區內公共建設完善，食、衣、住、行、育、樂一應俱全，讓社區生活資源更加豐富多源，此外民生社區公園綠地眾多，綠蔭空間寬廣，創造出優質之生活環境品質。",
+                    imageUrl: "https://example.com/minsheng.jpg"
+                },
+                {
+                    spotName: "東區商圈",
+                    lat: 25.041326,
+                    lng: 121.557975,
+                    description: "東區位於重要交通要道上，擁有便利交通運輸規劃與設施，並以潮流藝文元素及夜經濟之特性並結合巷弄特色店家創店首發站，發展「夜食」、「夜遊」、「夜享」、「夜讀」及「夜時尚」之「東區五夜城」，打造東區為民眾夜品臺北首選。不論是以年輕族群為主的運動品牌，高價位的各國精品名店也能在各個路口彰顯，各種新奇創意的美食亦藏身在巷弄之間，因而吸引年輕及上班族群在此聚集，另亦為臺北市時尚流行之重鎮。",
+                    imageUrl: "https://example.com/dongqu.jpg"
+                }
+            ],
+            "百年古蹟文化城，剝皮寮懷舊之旅": [
+                {
+                    spotName: "艋舺服飾商圈",
+                    lat: 25.036313,
+                    lng: 121.499684,
+                    description: "早期因臨近萬華車站佔了交通地利之便，形成了台灣第一個成衣銷售批發市場，發展至今約有半世紀的歷程，可說是台灣成衣業的發源地，包括批發市場、製衣工廠皆聚集在萬華火車站、大理街一帶，全盛時期曾高達二千多家廠商。本商圈亦為俗稱「親家母裝」或「媽媽裝」的熟齡女禮服勝地，晚禮服款式相當齊全，這些商品在以少淑女裝為販售最大宗的艋舺服飾商圈中，別具特色。106年凱撒飯店進駐雙子星大樓，結合周邊特色景點例如萬華林宅與西園29服飾創作基地，吸引國內外遊逛人潮前往。",
+                    imageUrl: "https://example.com/mengjia_clothing.jpg"
+                },
+                {
+                    spotName: "艋舺夜市商圈",
+                    lat: 25.037516,
+                    lng: 121.499962,
+                    description: "從清代持續帶動萬華地區的繁榮，保留了許多具有歷史意義的台北發展痕跡，因為文化多元、歷史悠久，美食小吃也相當多樣化，包括有許多的傳統台灣小吃，展現臺灣的古早風味。",
+                    imageUrl: "https://example.com/mengjia_nightmarket.jpg"
+                },
+                {
+                    spotName: "萬華街區商圈",
+                    lat: 25.037440270842424,
+                    lng:  121.4995377996595,
+                    description: "萬華街區商圈之店家，包含許多一甲子名店，甚至是百年老店，身處臺北市的發源地，文化底蘊深厚，也是臺北常民生活所在，其中艋舺龍山寺為國際觀光客到臺北之必遊景點，青山王祭更是北臺灣最大的廟宇活動，此外，商圈內包含多條知名觀光夜市，如艋舺夜市、華西街夜市、廣州街夜市等，排隊美食不勝枚舉。",
+                    imageUrl: "https://example.com/mengjia_nightmarket.jpg"
+                },
+                {
+                    spotName: "西門町商圈",
+                    lat: 25.042940543331728,
+                    lng:  121.50772302118392,
+                    description: "西門町商圈為臺北市首座徒步商圈，商圈組織扮演在地經營最佳實踐者，名列為臺北市十大國際觀光客必遊景點。西門町商圈堪稱為全臺新舊文化的引領者，舉凡電影產業、音樂產業、文創產業、創意市集、塗鴉文化、刺青藝術、街頭藝人、動漫產業及明星潮流品牌等，成為國內外參訪團首選商圈。",
+                    imageUrl: "https://example.com/mengjia_nightmarket.jpg"
+                },
+                {
+                    spotName: "西園路佛具街",
+                    lat: 25.03744292998076,
+                    lng:  121.49943549885975,
+                    description: "龍山寺旁的西園路一段，約有二十間佛具店聚集於此，供顧客細細挑選與比價，成為臺灣知名的「佛具街」。除了販售各式佛、道教及宮廟神像之外，其他相關用品如神桌、爐、杯、燈具、神聯，以及神明衣帽、八仙彩、桌裙等刺繡或手繪神像、紙錢香燭，應有盡有。多數代代家傳的老店面，經營者也不乏是雕刻背景出身，或有配合之藝術工匠師傅；除此之外，或者幫顧客挑選黃道吉日、開光、入厝迎神、安神位、神堂設計、神像維修、專門訂製、儀式等，都是店家的服務項目。",
+                    imageUrl: "https://example.com/mengjia_nightmarket.jpg"
+                }
+            ],
+            "水道水源地之旅(臺北水旅行)": [
+                {
+                    spotName: "臺大公館商圈",
+                    lat: 25.014942,
+                    lng: 121.534671,
+                    description: "因應臺灣大學週邊而起的臺大公館商圈，各種小吃美食、人文咖啡館、二手書店等特色店家為其最知名之處，也成為年輕學子的最愛。另像是自來水博物館、新店溪自行車道、客家文物館、水源市場，更加強了「樂活‧水岸‧休閒」的特色，寶藏巖共生聚落，目前進駐許多藝術家及創意工作者，同時也進行商圈特色店家改造，依店家特色以創意元素導入呈現更多元的特色，吸引更多消費者到公館遊玩消費。",
+                    imageUrl: "https://example.com/taida_gongguan.jpg"
+                },
+                {
+                    spotName: "南昌家具街商圈",
+                    lat: 25.026656,
+                    lng: 121.527415,
+                    description: "南昌家具(商圈)的特色莫過於老字號的幾家店家，皆經過3代經營，從傳統近乎於藝術品的手工藝家具到年輕人接手後經營的現代時尚精品家具應有盡有。手做家具起家的南昌家具街，強調「耐用實惠」，是經過一甲子都不會消失的特色，更是使老主顧們都捨棄不了的忠誠度的主因。近來也針對許多不同族群推出如新婚夫妻甜蜜型、小資夫妻成家經濟型、中年事業有成型等不同促銷方案。",
+                    imageUrl: "https://example.com/nanchang_furniture.jpg"
+                },
+                {
+                    spotName: "永康商圈",
+                    lat: 25.033529773898604, 
+                    lng: 121.53001321715011,
+                    description: "以「永康公園」為中心，大多以特色餐飲為主，早期發展與鼎泰豐息息相關，藉由媒體報導，讓鼎泰豐成為國際觀光客旅遊的知名美食之一，也帶動起永康街的知名度。小小的巷道聚集了一家家臺灣風味的餐館，之後加入了更多異國特色美食和許多風格獨具的咖啡小館，許多個性小舖也紛紛在此聚集，充滿濃厚的人文風格，逐漸形塑出永康街的獨特魅力，並成為聞名國際的選逛景點。",
+                    imageUrl: "https://example.com/nanchang_furniture.jpg"
+                },
+                {
+                    spotName: "愛國東路婚紗商圈",
+                    lat: 25.033935420968835, 
+                    lng:  121.51849037394557,
+                    description: "這裡曾經是一般照相館聚集處，由於鄰近中正紀念堂，為戶外拍攝取景的好選擇，相館搖身一變成了婚紗攝影館。相對於中山北路高檔路線，以及板橋三重新莊的平價風，愛國東路定位於中價位。",
+                    imageUrl: "https://example.com/nanchang_furniture.jpg"
+                },
+                {
+                    spotName: "加蚋商圈",
+                    lat: 25.02497759938597, 
+                    lng:   121.49691859668286,
+                    description: "南萬華「加蚋仔」名稱源自平埔族，凱達格蘭語有「沼澤」之意。早年此地水道縱橫，經新店溪沖積沃土，先民依水而居，孕育豆芽菜、茉莉花、麻竹筍等經濟作物。而隨著現代化都市發展，曾綿軟肥沃的田地鋪上柏油路，湧泉被水泥遮蓋，親水的村莊遷至高高築起的堤防內，人們也逐漸忘卻河水與土地哺育的記憶。 加蚋商圈為生活圈型態之商圈，組成如星狀分佈，期許茁壯而為這台北市最早拓墾的城南區域。在捷運萬大線開通、交通網絡完善的未來，鋪陳健全生活、商業交流、傳統市場動能及人文記憶融合的新生命。",
+                    imageUrl: "https://example.com/nanchang_furniture.jpg"
+                }
+            ]
+        };
+
+        const routeIcons = {
+            "偽出國，紓壓放鬆輕旅行": "http://maps.google.com/mapfiles/ms/icons/purple-dot.png",
+            "走靜貓空，踏青一日遊": "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+            "穿越時光，探索台北城之旅": "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+            "百年古蹟文化城，剝皮寮懷舊之旅": "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+            "水道水源地之旅(臺北水旅行)": "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+        };
+
+        document.getElementById("routeSelect").addEventListener("change", function () {
+            const districtSelect = document.getElementById("districtSelect");
+            districtSelect.innerHTML = `<option value="">請先選擇商圈</option>`;
+            const selectedRoute = this.value;
+            
+            if (!selectedRoute) {
+                districtSelect.disabled = true;
+                return;
+            }
+            
+            districtSelect.disabled = false; // 確保選項被啟用
+
+            const districts = locationsData[selectedRoute];
+            districts.forEach((district, index) => {
+                districtSelect.innerHTML += `<option value="${index}">${district.spotName}</option>`;
+            });
+        });
+
+        document.getElementById("districtSelect").addEventListener("change", function () {
+            const selectedRoute = document.getElementById("routeSelect").value;
+            const selectedDistrictIndex = this.value;
+            if (selectedRoute && selectedDistrictIndex) {
+                const district = locationsData[selectedRoute][selectedDistrictIndex];
+                drawMarkersAndRoute([district], selectedRoute);
+                displayDescription(district);
+            }
+        });
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 25.033964, lng: 121.564468 }, // 預設台北市中心
+                zoom: 12,
+            });
+            directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
+        }
+
+        function drawMarkersAndRoute(locations, route) {
+            clearMarkers();
+            const iconUrl = routeIcons[route];
+            locations.forEach(location => {
+                const latLng = { lat: location.lat, lng: location.lng };
+                const marker = new google.maps.Marker({
+                    position: latLng,
+                    map: map,
+                    title: location.spotName,
+                    icon: iconUrl
+                });
+
+                // 點擊標記後跳轉到 Google Maps
+                google.maps.event.addListener(marker, 'click', function() {
+                    window.open(`https://www.google.com/maps?q=${location.lat},${location.lng}`, '_blank');
+                });
+
+                markers.push(marker);
+            });
+
+            if (locations.length > 1) {
+                const waypoints = locations.slice(1, -1).map(loc => ({
+                    location: { lat: loc.lat, lng: loc.lng },
+                    stopover: true,
+                }));
+
+                const request = {
+                    origin: { lat: locations[0].lat, lng: locations[0].lng },
+                    destination: { lat: locations[locations.length - 1].lat, lng: locations[locations.length - 1].lng },
+                    waypoints: waypoints,
+                    travelMode: google.maps.TravelMode.TRANSIT,
+                };
+
+                directionsService.route(request, (result, status) => {
+                    if (status === google.maps.DirectionsStatus.OK) {
+                        directionsRenderer.setDirections(result);
+                    } else {
+                        console.error('無法繪製路徑:', status);
+                    }
+                });
+            }
+        }
+
+        function clearMarkers() {
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+        }
+
+        function displayDescription(district) {
+            const descriptionContainer = document.getElementById('description');
+            const imageHtml = district.imageUrl ? `<img src="${district.imageUrl}" alt="${district.spotName}" style="width: 100%; max-width: 300px;">` : '';
+            if (!descriptionContainer) {
+                const newDescriptionContainer = document.createElement('div');
+                newDescriptionContainer.id = 'description';
+                document.body.appendChild(newDescriptionContainer);
+                newDescriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imageHtml}<p>${district.description}</p>`;
+            } else {
+                descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imageHtml}<p>${district.description}</p>`;
+            }
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>
