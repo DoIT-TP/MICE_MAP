@@ -76,6 +76,7 @@
         let markers = []; // Array to store all map markers
         let polylinePaths = []; // Array to store all polylines drawn on the map
         let currentPolyline; // Currently active polyline
+        let infoWindows = []; // Array to store all info windows
 
         function initMap() {
             // Initialize the Google Map with specified center and zoom level
@@ -113,6 +114,7 @@
                     return new Promise((resolve, reject) => {
                         let address = location['PlusCodes'] || location['地址']; // Use PlusCodes if available, otherwise use address
                         let id = location['編號']; // Unique ID for the location
+                        let website = location['網址']; // Website URL for the location
 
                         // Geocode the address to get latitude and longitude
                         geocoder.geocode({ 'address': address }, function (results, status) {
@@ -137,6 +139,23 @@
                                         fontWeight: 'bold'
                                     });
                                 }
+
+                                // Create info window for the marker
+                                let infoWindowContent = `<div><strong>${location['景點名稱']}</strong><br>${address}</div>`;
+                                if (website) {
+                                    infoWindowContent += `<br><a href="${website}" target="_blank">查看更多資訊</a>`;
+                                }
+                                const infoWindow = new google.maps.InfoWindow({
+                                    content: infoWindowContent
+                                });
+                                infoWindows.push(infoWindow);
+
+                                // Add click listener to open info window
+                                marker.addListener('click', () => {
+                                    // Close all other info windows before opening the new one
+                                    infoWindows.forEach(infoWin => infoWin.close());
+                                    infoWindow.open(map, marker);
+                                });
 
                                 // Add the location to polyline coordinates array
                                 polylineCoordinates.push(results[0].geometry.location);
@@ -175,6 +194,10 @@
             // Clear all polylines from the map
             polylinePaths.forEach(path => path.setMap(null));
             polylinePaths = [];
+
+            // Close all info windows
+            infoWindows.forEach(infoWindow => infoWindow.close());
+            infoWindows = [];
         }
 
         // Initialize the map when the window loads
