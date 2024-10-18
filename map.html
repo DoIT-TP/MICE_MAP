@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Google Map with CSV Tourist Spots</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqEBoy8tcL8KyNHwKSPPWmOZ3L7w1dWJg"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    <script
+        src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+</head>
+
+<body>
+    <div id="map" style="height: 500px; width: 100%;"></div>
+    <button
+        onclick="loadTour('濕地協會特色遊程- 百年古蹟文化城，剝皮寮懷舊之旅.csv','#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png')">百年古蹟文化城，剝皮寮懷舊之旅</button>
+    <button
+        onclick="loadTour('濕地協會特色遊程- 水道水源地之旅(臺北水旅行).csv', '#00FF00', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png')">水道水源地之旅(臺北水旅行)</button>
+    <button
+        onclick="loadTour('濕地協會特色遊程- 走靜貓空，踏青一日遊.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png')">走靜貓空，踏青一日遊</button>
+    <button
+        onclick="loadTour('濕地協會特色遊程- 穿越時光，探索台北城之旅.csv', '#FFFF00', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')">穿越時光，探索台北城之旅</button>
+    <button
+        onclick="loadTour('濕地協會特色遊程- 紓壓放鬆輕旅行.csv', '#FF00FF', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png')">紓壓放鬆輕旅行</button>
+
+    <script>
+        let map;
+        let markers = [];
+        let polylinePaths = [];
+        let currentPolyline;
+        let directionsService;
+        let directionsRenderer;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 25.0330, lng: 121.5654 },
+                zoom: 12
+            });
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
+        }
+
+        function loadTour(csvFile, polylineColor, markerIcon) {
+            clearMap();
+            fetch(csvFile)
+                .then(response => response.text())
+                .then(csvData => {
+                    Papa.parse(csvData, {
+                        header: true,
+                        dynamicTyping: true,
+                        complete: function (results) {
+                            plotLocations(results.data, polylineColor, markerIcon);
+                        }
+                    });
+                });
+        }
+
+        function plotLocations(data, polylineColor, markerIcon) {
+            let polylineCoordinates = [];
+            let geocodeCount = 0;
+            const geocoder = new google.maps.Geocoder();
+
+            data.reduce((promise, location, index) => {
+                return promise.then(() => {
+                    return new Promise((resolve, reject) => {
+                        let address = location['PlusCodes'] || location['地址'];
+                        let website = location['網址'];
+                        let id = location['編號'];
+
+                        geocoder.geocode({ 'address': address }, function (results, status) {
+                            if (status === 'OK') {
+                                const marker = new google.maps.Marker({
+                                    position: results[0].geometry.location,
+                                    map: map,
+                                    icon: markerIcon,
+                                    title: `${id}: ${location['景點名稱']}`
+                                });
+                                markers.push(marker);
+
+                                if (index === 0) {
+                                    marker.setLabel('No.1');
+                                }
+
+                                polylineCoordinates.push(results[0].geometry.location);
+
+                                let infoWindowContent = `<h3>${id}: ${location['景點名稱']}</h3><p>${address}</p>`;
+                                if (website) {
+                                    infoWindowContent += `<p><a href="${website}" target="_blank">查看更多資訊</a></p>`;
+                                }
+
+                                const infoWindow = new google.maps.InfoWindow({
+                                    content: infoWindowContent
+                                });
+                                marker.addListener('click', () => {
+                                    infoWindow.open(map, marker);
+                                    if (index < polylineCoordinates.length - 1) {
+                                        drawPolyline([polylineCoordinates[index], polylineCoordinates[index + 1]], polylineColor);
+                                    }
+                                });
+
+                                geocodeCount++;
+                                if (geocodeCount === data.length) {
+                                    drawInitialPolyline(polylineCoordinates, polylineColor);
+                                }
+                                resolve();
+                            } else {
+                                console.error(`Geocode failed for address: ${address}, status: ${status}`);
+                                resolve();
+                            }
+                        });
+                    });
+                });
+            }, Promise.resolve());
+        }
+
+        function drawInitialPolyline(coordinates, color) {
+            if (coordinates.length >= 2) {
+                const initialPath = [coordinates[0], coordinates[1]];
+                currentPolyline = new google.maps.Polyline({
+                    path: initialPath,
+                    geodesic: true,
+                    strokeColor: color,
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2
+                });
+                currentPolyline.setMap(map);
+                polylinePaths.push(currentPolyline);
+            }
+        }
+
+        function drawPolyline(coordinates, color) {
+            if (currentPolyline) {
+                currentPolyline.setMap(null);
+            }
+            currentPolyline = new google.maps.Polyline({
+                path: coordinates,
+                geodesic: true,
+                strokeColor: color,
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+            currentPolyline.setMap(map);
+            polylinePaths.push(currentPolyline);
+        }
+
+        function clearMap() {
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+
+            polylinePaths.forEach(path => path.setMap(null));
+            polylinePaths = [];
+
+            directionsRenderer.set('directions', null);
+        }
+
+        // Initialize the map
+        window.onload = initMap;
+    </script>
+
+</body>
+
+</html>
