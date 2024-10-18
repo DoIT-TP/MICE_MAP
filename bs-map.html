@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>旅遊路線地圖</title>
+    <title>旅遊路線-商圈地圖</title>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q&libraries=places"></script>
 </head>
 <body>
     <select id="routeSelect">
         <option value="">請選擇旅遊路線</option>
-        <option value="偽出國，紓壓放鬆輕旅行">偽出國，紓壓放鬆輕旅行</option>
+        <option value="紓壓放鬆輕旅">紓壓放鬆輕旅行</option>
         <option value="走靜貓空，踏青一日遊">走靜貓空，踏青一日遊</option>
         <option value="穿越時光，探索台北城之旅">穿越時光，探索台北城之旅</option>
         <option value="百年古蹟文化城，剝皮寮懷舊之旅">百年古蹟文化城，剝皮寮懷舊之旅</option>
@@ -84,6 +84,7 @@
             clearMarkers();
             locations.forEach(location => {
                 const latLng = { lat: location.lat, lng: location.lng };
+                map.setCenter(latLng);  // 設置地圖中心為該位置
                 const marker = new google.maps.Marker({
                     position: latLng,
                     map: map,
