@@ -76,18 +76,17 @@
             }
         });
 
-// 監聽商圈選擇
-document.getElementById("districtSelect").addEventListener("change", function () {
-    const selectedRoute = document.getElementById("routeSelect").value;
-    const selectedDistrictIndex = this.value;
-    if (selectedRoute && selectedDistrictIndex !== "") {
-        clearMarkers();  // 清除所有舊的標記
-        const district = locationsData[selectedRoute][selectedDistrictIndex];
-        geocodeAddress(district.address, district);
-        displayDescription(district);
-    }
-});
-
+        // 監聽商圈選擇
+        document.getElementById("districtSelect").addEventListener("change", function () {
+            const selectedRoute = document.getElementById("routeSelect").value;
+            const selectedDistrictIndex = this.value;
+            if (selectedRoute && selectedDistrictIndex !== "") {
+                clearMarkers();  // 清除所有舊的標記
+                const district = locationsData[selectedRoute][selectedDistrictIndex];
+                geocodeAddress(district.address, district);
+                displayDescription(district);
+            }
+        });
 
         // 使用地址進行地理編碼並繪製標記
         function geocodeAddress(address, location) {
@@ -95,6 +94,7 @@ document.getElementById("districtSelect").addEventListener("change", function ()
             geocoder.geocode({ address: address }, function (results, status) {
                 if (status === google.maps.GeocoderStatus.OK) {
                     const latLng = results[0].geometry.location;
+                    map.setCenter(latLng);  // 設置地圖中心為該地址的位置
                     placeMarker(latLng, location);
                 } else {
                     console.error('Geocode was not successful for the following reason: ' + status);
