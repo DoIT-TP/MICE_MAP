@@ -3,23 +3,23 @@
 
 <head>
     <title>MICE-遊程</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q"></script>
+    <!-- 引入必要的腳本 -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
     <script
-        src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+        src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
     <style>
         html,
         body {
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden;
         }
 
         #container {
             display: flex;
             flex-direction: column;
-            height: 100vh;
         }
 
         #button-container {
@@ -28,8 +28,9 @@
         }
 
         #map {
-            flex-grow: 1;
             width: 100%;
+            /* 設置地圖高度為視窗高度的60% */
+            height: 80vh;
         }
 
         #tour-info {
@@ -37,9 +38,14 @@
             background-color: #f9f9f9;
             border-top: 1px solid #ccc;
             display: flex;
+            flex-direction: row;
             align-items: center;
             flex-wrap: wrap;
-            overflow-y: auto;
+        }
+
+        #tour-info h2 {
+            margin: 0 0 10px 0;
+            width: 100%;
         }
 
         #tour-info div {
@@ -86,7 +92,8 @@
 
 <body>
     <div>
-        <a href='https://doit-tp.github.io/MICE_MAP/bs-map.html'>MICE-商圈</a>&nbsp;<a href='https://doit-tp.github.io/MICE_MAP/store-map.html'>MICE-商家</a>
+        <a href='https://doit-tp.github.io/MICE_MAP/bs-map.html'>MICE-商圈</a>&nbsp;<a
+            href='https://doit-tp.github.io/MICE_MAP/store-map.html'>MICE-商家</a>
     </div>
     <div id="container">
         <div id="button-container">
