@@ -133,7 +133,7 @@
                 if (status === google.maps.GeocoderStatus.OK) {
                     const latLng = results[0].geometry.location;
                     map.setCenter(latLng);  // 設置地圖中心為該地址的位置
-                    map.setZoom(15); //縮放
+                    map.setZoom(18); //縮放
                     placeMarker(latLng, location);
                 } else {
                     console.error('Geocode was not successful for the following reason: ' + status);
