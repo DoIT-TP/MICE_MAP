@@ -38,6 +38,19 @@
             overflow-y: auto;
             background-color: #f9f9f9;
             border-top: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+
+        #tour-info div {
+            display: flex;
+            align-items: center;
+        }
+
+        #tour-info a {
+            margin: 0 10px;
         }
 
         button {
@@ -173,7 +186,10 @@
                                 // Add the spot to the tour-info section with a link
                                 let tourInfoDiv = document.getElementById('tour-info');
                                 let spotElement = document.createElement('div');
-                                spotElement.innerHTML = `<a href="${spotUrl}" target="_blank">${spotName}</a>`;
+                                spotElement.innerHTML = `<span>${index + 1}. </span><a href="${spotUrl}" target="_blank">${spotName}</a>`;
+                                if (index < data.length - 1) {
+                                    spotElement.innerHTML += ' <span>&#x279E;</span> '; // Add right arrow between items
+                                }
                                 tourInfoDiv.appendChild(spotElement);
 
                                 resolve();
