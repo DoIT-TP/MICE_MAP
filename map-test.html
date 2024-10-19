@@ -172,16 +172,15 @@
                                 });
                                 markers.push(marker);
 
-                                if (index === 0) {
-                                    marker.setIcon('http://maps.google.com/mapfiles/kml/paddle/1.png');
-                                    marker.setAnimation(google.maps.Animation.BOUNCE);
-                                    marker.setLabel({
-                                        text: '起點',
-                                        color: 'black',
-                                        fontSize: '16px',
-                                        fontWeight: 'bold'
-                                    });
-                                }
+                            if (index === 0) {
+                                const enlargedIcon = {
+                                    url: markerIcon, // 使用與其他地標相同的圖標
+                                    scaledSize: new google.maps.Size(50, 50) // 調整圖標大小，原始大小通常為 20x20
+                                };
+                                marker.setIcon(enlargedIcon);
+                                marker.setAnimation(google.maps.Animation.BOUNCE);
+                            }
+
 
                                 let infoWindowContent = `<div><strong>${spotName}</strong><br>${address}</div>`;
                                 const infoWindow = new google.maps.InfoWindow({
