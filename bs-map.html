@@ -123,7 +123,7 @@
             locations.forEach(location => {
                 const latLng = { lat: location.lat, lng: location.lng };
                 map.setCenter(latLng);  // 設置地圖中心為該位置
-                map.setZoom(15); //縮放
+                map.setZoom(18); //縮放
                 const marker = new google.maps.Marker({
                     position: latLng,
                     map: map,
