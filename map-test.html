@@ -98,15 +98,15 @@
     <div id="container">
         <div id="button-container">
             <button 
-                onclick="loadTour('濕地協會特色遊程- 百年古蹟文化城，剝皮寮懷舊之旅.csv','#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', '百年古蹟文化城，剝皮寮懷舊之旅')">百年古蹟文化城，剝皮寮懷舊之旅</button>
+                onclick="loadTour('濕地協會特色遊程- 百年古蹟文化城，剝皮寮懷舊之旅.csv','#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', '百年古蹟文化城，剝皮寮懷舊之旅', 'https://www.travel.taipei/zh-tw/fun/tour/details/1286')">百年古蹟文化城，剝皮寮懷舊之旅</button>
             <button
-                onclick="loadTour('濕地協會特色遊程- 水道水源地之旅(臺北水旅行).csv', '#00FF00', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png', '水道水源地之旅(臺北水旅行)')">水道水源地之旅(臺北水旅行)</button>
+                onclick="loadTour('濕地協會特色遊程- 水道水源地之旅(臺北水旅行).csv', '#00FF00', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png', '水道水源地之旅(臺北水旅行)', 'https://www.travel.taipei/zh-tw/fun/tour/details/1288')">水道水源地之旅(臺北水旅行)</button>
             <button
-                onclick="loadTour('濕地協會特色遊程- 走靜貓空，踏青一日遊.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', '走靜貓空，踏青一日遊')">走靜貓空，踏青一日遊</button>
+                onclick="loadTour('濕地協會特色遊程- 走靜貓空，踏青一日遊.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', '走靜貓空，踏青一日遊', 'https://www.travel.taipei/zh-tw/fun/tour/details/1287')">走靜貓空，踏青一日遊</button>
             <button
-                onclick="loadTour('濕地協會特色遊程- 穿越時光，探索台北城之旅.csv', '#FFFF00', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png', '穿越時光，探索台北城之旅')">穿越時光，探索台北城之旅</button>
+                onclick="loadTour('濕地協會特色遊程- 穿越時光，探索台北城之旅.csv', '#FFFF00', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png', '穿越時光，探索台北城之旅', 'https://www.travel.taipei/zh-tw/fun/tour/details/1284')">穿越時光，探索台北城之旅</button>
             <button
-                onclick="loadTour('濕地協會特色遊程- 紓壓放鬆輕旅行.csv', '#FF00FF', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png', '紓壓放鬆輕旅行')">紓壓放鬆輕旅行</button>
+                onclick="loadTour('濕地協會特色遊程- 紓壓放鬆輕旅行.csv', '#FF00FF', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png', '紓壓放鬆輕旅行', 'https://www.travel.taipei/zh-tw/fun/tour/details/1283')">紓壓放鬆輕旅行</button>
         </div>
         <div id="map"></div>
         <div id="tour-info"></div>
@@ -127,11 +127,11 @@
             });
         }
 
-        function loadTour(csvFile, polylineColor, markerIcon, tourName) {
+        function loadTour(csvFile, polylineColor, markerIcon, tourName ,tourUrl) {
             // 清除地圖上的標記和線條
             clearMap();
             // 添加標題到景點資訊區塊
-            document.getElementById('tour-info').innerHTML = `<h2>${tourName}</h2>`;
+            document.getElementById('tour-info').innerHTML = `<h2><a href="${tourUrl}" target="_blank">${tourName}</a></h2>`;
             fetch('./csv/' + csvFile)
                 .then(response => response.text())
                 .then(csvData => {
