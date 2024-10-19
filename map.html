@@ -3,23 +3,23 @@
 
 <head>
     <title>MICE-遊程</title>
+    <!-- 引入必要的腳本 -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
     <script
-        src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+        src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
     <style>
         html,
         body {
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden;
         }
 
         #container {
             display: flex;
             flex-direction: column;
-            height: 100vh;
         }
 
         #button-container {
@@ -28,14 +28,41 @@
         }
 
         #map {
-            flex-grow: 1;
+            width: 100%;
+            /* 設置地圖高度為視窗高度的60% */
+            height: 70vh;
+        }
+
+        #tour-info {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ccc;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        #tour-info h2 {
+            margin: 0 0 10px 0;
             width: 100%;
         }
 
+        #tour-info div {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+            white-space: nowrap;
+        }
+
+        #tour-info a {
+            margin: 0 5px;
+        }
+
         button {
-            margin: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
+            margin: 3px;
+            padding: 6px 12px;
+            font-size: 14px;
         }
 
         @media (max-width: 768px) {
@@ -50,28 +77,39 @@
                 min-width: 100px;
                 margin: 5px;
             }
+
+            #tour-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            #tour-info div {
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div>
-        <a href='https://doit-tp.github.io/MICE_MAP/bs-map.html'>MICE-商圈</a>&nbsp<a href='https://doit-tp.github.io/MICE_MAP/store-map.html'>MICE-商家</a>
+        <a href='https://doit-tp.github.io/MICE_MAP/bs-map.html'>MICE-商圈</a>&nbsp;<a
+            href='https://doit-tp.github.io/MICE_MAP/store-map.html'>MICE-商家</a>
     </div>
     <div id="container">
         <div id="button-container">
+            <button 
+                onclick="loadTour('濕地協會特色遊程- 百年古蹟文化城，剝皮寮懷舊之旅.csv','#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', '百年古蹟文化城，剝皮寮懷舊之旅', 'https://www.travel.taipei/zh-tw/fun/tour/details/1286')">百年古蹟文化城，剝皮寮懷舊之旅</button>
             <button
-                onclick="loadTour('濕地協會特色遊程- 百年古蹟文化城，剝皮寮懷舊之旅.csv','#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png')">百年古蹟文化城，剝皮寮懷舊之旅</button>
+                onclick="loadTour('濕地協會特色遊程- 水道水源地之旅(臺北水旅行).csv', '#00FF00', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png', '水道水源地之旅(臺北水旅行)', 'https://www.travel.taipei/zh-tw/fun/tour/details/1288')">水道水源地之旅(臺北水旅行)</button>
             <button
-                onclick="loadTour('濕地協會特色遊程- 水道水源地之旅(臺北水旅行).csv', '#00FF00', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png')">水道水源地之旅(臺北水旅行)</button>
+                onclick="loadTour('濕地協會特色遊程- 走靜貓空，踏青一日遊.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', '走靜貓空，踏青一日遊', 'https://www.travel.taipei/zh-tw/fun/tour/details/1287')">走靜貓空，踏青一日遊</button>
             <button
-                onclick="loadTour('濕地協會特色遊程- 走靜貓空，踏青一日遊.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png')">走靜貓空，踏青一日遊</button>
+                onclick="loadTour('濕地協會特色遊程- 穿越時光，探索台北城之旅.csv', '#FFFF00', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png', '穿越時光，探索台北城之旅', 'https://www.travel.taipei/zh-tw/fun/tour/details/1284')">穿越時光，探索台北城之旅</button>
             <button
-                onclick="loadTour('濕地協會特色遊程- 穿越時光，探索台北城之旅.csv', '#FFFF00', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')">穿越時光，探索台北城之旅</button>
-            <button
-                onclick="loadTour('濕地協會特色遊程- 紓壓放鬆輕旅行.csv', '#FF00FF', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png')">紓壓放鬆輕旅行</button>
+                onclick="loadTour('濕地協會特色遊程- 紓壓放鬆輕旅行.csv', '#FF00FF', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png', '紓壓放鬆輕旅行', 'https://www.travel.taipei/zh-tw/fun/tour/details/1283')">紓壓放鬆輕旅行</button>
         </div>
         <div id="map"></div>
+        <div id="tour-info"></div>
     </div>
 
     <script>
@@ -89,18 +127,20 @@
             });
         }
 
-        function loadTour(csvFile, polylineColor, markerIcon) {
-            // Clear existing markers and polylines before loading new tour
+        function loadTour(csvFile, polylineColor, markerIcon, tourName ,tourUrl) {
+            // 清除地圖上的標記和線條
             clearMap();
+            // 添加標題到景點資訊區塊
+            document.getElementById('tour-info').innerHTML = `<h2><a href="${tourUrl}" target="_blank">${tourName}</a></h2>`;
             fetch('./csv/' + csvFile)
                 .then(response => response.text())
                 .then(csvData => {
-                    // Parse CSV data using PapaParse library
+                    // 解析 CSV 資料
                     Papa.parse(csvData, {
                         header: true,
                         dynamicTyping: true,
                         complete: function (results) {
-                            // Plot the locations from the parsed CSV data
+                            // 繪製景點
                             plotLocations(results.data, polylineColor, markerIcon);
                         }
                     });
@@ -108,21 +148,22 @@
         }
 
         function plotLocations(data, polylineColor, markerIcon) {
-            let polylineCoordinates = []; // Array to store coordinates for drawing the polyline
-            const geocoder = new google.maps.Geocoder(); // Geocoder service for converting addresses to coordinates
+            // 過濾空的資料項
+            data = data.filter(entry => entry && entry['景點名稱']);
 
-            // Use reduce to process geocoding sequentially to maintain the order of locations
+            let polylineCoordinates = [];
+            const geocoder = new google.maps.Geocoder();
+
             data.reduce((promise, location, index) => {
                 return promise.then(() => {
                     return new Promise((resolve, reject) => {
-                        let address = location['PlusCodes'] || location['地址']; // Use PlusCodes if available, otherwise use address
-                        let id = location['編號']; // Unique ID for the location
-                        let spotName = location['景點名稱']; // Spot name
+                        let address = location['PlusCodes'] || location['地址'];
+                        let id = location['編號'];
+                        let spotName = location['景點名稱'];
+                        let spotUrl = location['網址'];
 
-                        // Geocode the address to get latitude and longitude
                         geocoder.geocode({ 'address': address }, function (results, status) {
                             if (status === 'OK') {
-                                // Create a marker for the location
                                 const marker = new google.maps.Marker({
                                     position: results[0].geometry.location,
                                     map: map,
@@ -131,37 +172,45 @@
                                 });
                                 markers.push(marker);
 
-                                // Label the first marker with '起點' and add animation effect
-                                if (index === 0) {
-                                    marker.setIcon('http://maps.google.com/mapfiles/kml/paddle/1.png');
-                                    marker.setAnimation(google.maps.Animation.BOUNCE); // Add bounce animation
-                                    marker.setLabel({
-                                        text: '起點',
-                                        color: 'black',
-                                        fontSize: '16px',
-                                        fontWeight: 'bold'
-                                    });
-                                }
+                            if (index === 0) {
+                                const enlargedIcon = {
+                                    url: markerIcon, // 使用與其他地標相同的圖標
+                                    scaledSize: new google.maps.Size(50, 50) // 調整圖標大小，原始大小通常為 20x20
+                                };
+                                marker.setIcon(enlargedIcon);
+                                marker.setAnimation(google.maps.Animation.BOUNCE);
+                                // 設置地圖中心為起點位置
+                                map.setCenter(results[0].geometry.location);
+                                // 調整地圖縮放級別
+                                map.setZoom(12);
+                            }
 
-                                // Create info window for the marker
+
                                 let infoWindowContent = `<div><strong>${spotName}</strong><br>${address}</div>`;
                                 const infoWindow = new google.maps.InfoWindow({
                                     content: infoWindowContent
                                 });
                                 infoWindows.push(infoWindow);
 
-                                // Add click listener to open Google Maps directly
                                 marker.addListener('click', () => {
                                     let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
                                     window.open(mapsUrl, '_blank');
                                 });
 
-                                // Add the location to polyline coordinates array
                                 polylineCoordinates.push(results[0].geometry.location);
+
+                                let tourInfoDiv = document.getElementById('tour-info');
+                                let spotElement = document.createElement('div');
+                                spotElement.innerHTML = `<span>${index + 1}. </span><a href="${spotUrl}" target="_blank">${spotName}</a>`;
+                                if (index < data.length - 1) {
+                                    spotElement.innerHTML += ' <span>&#x279E;</span> '; // Add right arrow between items
+                                }
+                                tourInfoDiv.appendChild(spotElement);
+
                                 resolve();
                             } else {
                                 console.error(`Geocode failed for address: ${address}, status: ${status}`);
-                                resolve(); // Resolve the promise even if geocoding fails to continue processing
+                                resolve();
                             }
                         });
                     });
@@ -173,7 +222,6 @@
         }
 
         function drawPolyline(coordinates, color) {
-            // Draw a new polyline with the specified coordinates and color
             currentPolyline = new google.maps.Polyline({
                 path: coordinates,
                 geodesic: true,
@@ -186,20 +234,16 @@
         }
 
         function clearMap() {
-            // Clear all markers from the map
             markers.forEach(marker => marker.setMap(null));
             markers = [];
 
-            // Clear all polylines from the map
             polylinePaths.forEach(path => path.setMap(null));
             polylinePaths = [];
 
-            // Close all info windows
             infoWindows.forEach(infoWindow => infoWindow.close());
             infoWindows = [];
         }
 
-        // Initialize the map when the window loads
         window.onload = initMap;
     </script>
 </body>
