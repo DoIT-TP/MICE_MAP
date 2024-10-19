@@ -3,7 +3,7 @@
 
 <head>
     <title>MICE-遊程</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
     <script
         src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
@@ -90,8 +90,16 @@
     </div>
     <div id="container">
         <div id="button-container">
-            <button onclick="loadTour('濕地協會特色遊程- 百年古蹟文化城，剝皮寮懷舊之旅.csv','#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', '百年古蹟文化城，剝皮寮懷舊之旅')">百年古蹟文化城，剝皮寮懷舊之旅</button>
-            <!-- 其他按鈕 -->
+            <button 
+                onclick="loadTour('濕地協會特色遊程- 百年古蹟文化城，剝皮寮懷舊之旅.csv','#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', '百年古蹟文化城，剝皮寮懷舊之旅')">百年古蹟文化城，剝皮寮懷舊之旅</button>
+            <button
+                onclick="loadTour('濕地協會特色遊程- 水道水源地之旅(臺北水旅行).csv', '#00FF00', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png')">水道水源地之旅(臺北水旅行)</button>
+            <button
+                onclick="loadTour('濕地協會特色遊程- 走靜貓空，踏青一日遊.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png')">走靜貓空，踏青一日遊</button>
+            <button
+                onclick="loadTour('濕地協會特色遊程- 穿越時光，探索台北城之旅.csv', '#FFFF00', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')">穿越時光，探索台北城之旅</button>
+            <button
+                onclick="loadTour('濕地協會特色遊程- 紓壓放鬆輕旅行.csv', '#FF00FF', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png')">紓壓放鬆輕旅行</button>
         </div>
         <div id="map"></div>
         <div id="tour-info"></div>
