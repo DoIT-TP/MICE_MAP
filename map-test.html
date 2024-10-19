@@ -179,6 +179,10 @@
                                 };
                                 marker.setIcon(enlargedIcon);
                                 marker.setAnimation(google.maps.Animation.BOUNCE);
+                                // 設置地圖中心為起點位置
+                                map.setCenter(results[0].geometry.location);
+                                // 調整地圖縮放級別
+                                map.setZoom(14);
                             }
 
 
