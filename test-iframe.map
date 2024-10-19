@@ -1,0 +1,9 @@
+<p style="text-align: center;">
+   <iframe src="https://doit-tp.github.io/MICE_MAP/map-test.html" title="地圖" style="width:100%;height:80vh;"></iframe>
+</p>
+<p style="text-align: center;">
+   <iframe src="https://doit-tp.github.io/MICE_MAP/bs-map.html" title="地圖" style="width:100%;height:80vh;"></iframe>
+</p>
+<p style="text-align: center;">
+   <iframe src="https://doit-tp.github.io/MICE_MAP/store-map.html" title="地圖" style="width:100%;height:80vh;"></iframe>
+</p>
