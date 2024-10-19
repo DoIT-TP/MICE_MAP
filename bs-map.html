@@ -16,6 +16,7 @@
         #container {
             display: flex;
             flex-direction: column;
+            height: auto;
         }
 
         /* 地圖樣式 */
@@ -38,6 +39,14 @@
         /* 連結樣式（可選） */
         #container > div:first-child {
             padding: 10px;
+        }
+        @media (max-width: 768px) {
+            #map {
+                height: 50vh;
+            }
+            #container {
+                height: auto;
+            }
         }
     </style>
 </head>
