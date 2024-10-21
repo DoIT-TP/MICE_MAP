@@ -139,6 +139,7 @@
                     title: location.spotName,
                     icon: `http://maps.google.com/mapfiles/ms/icons/${location.markerColor}-dot.png`
                 });
+                marker.setAnimation(google.maps.Animation.BOUNCE);
 
                 // 點擊標記後跳轉到 Google Maps
                 google.maps.event.addListener(marker, 'click', function () {
