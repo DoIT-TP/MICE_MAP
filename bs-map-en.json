@@ -1,5 +1,5 @@
 {
-  "Stress Relief & Relaxation Tour": [
+  "A Relaxing Stress-Relief Getaway": [
     {
       "spotName": "Beitou District",
       "lat": 25.136829,
@@ -9,7 +9,7 @@
       "markerColor": "purple"
     }
   ],
-  "MaoKong Nature Day Tour": [
+  "Tranquil Maokong: A Day of Nature Walks": [
     {
       "spotName": "Maokong District",
       "lat": 24.960699,
@@ -27,7 +27,7 @@
       "markerColor": "blue"
     }
   ],
-  "Time Travel in Taipei City": [
+  "Passing Through the Time: An Exploration Journey of Taipei City": [
     {
       "spotName": "Wufenpu Garment Wholesale Shopping District",
       "lat": 25.050451,
@@ -95,7 +95,7 @@
       "markerColor": "red"
     }
   ],
-  "Taipei Water Tour": [
+  "The Story of Tap Water": [
     {
       "spotName": "Gongguan Shopping District",
       "lat": 25.014942,
