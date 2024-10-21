@@ -1,12 +1,59 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>旅遊路線地圖</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q&libraries=places"></script>
+    <title>MICE-shopping distric</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q&libraries=places&language=en"></script>
+    <style>
+        /* 重置外邊距和內邊距 */
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 容器 */
+        #container {
+            display: flex;
+            flex-direction: column;
+            height: auto;
+        }
+
+        /* 地圖樣式 */
+        #map {
+            width: 100%;
+            height: 75vh;
+        }
+
+        /* 控制項樣式 */
+        #controls {
+            padding: 10px;
+        }
+
+        select {
+            margin: 5px;
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        /* 連結樣式（可選） */
+        #container > div:first-child {
+            padding: 10px;
+        }
+        @media (max-width: 768px) {
+            #map {
+                height: 50vh;
+            }
+            #container {
+                height: auto;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div>
+        <a href='https://doit-tp.github.io/MICE_MAP/map.html'>MICE-遊程</a>&nbsp<a href='https://doit-tp.github.io/MICE_MAP/store-map.html'>MICE-商家</a>
+    </div>
     <select id="routeSelect">
         <option value="">select MICE tour</option>
         <option value="A Relaxing Stress-Relief Getaway">A Relaxing Stress-Relief Getaway</option>
@@ -16,9 +63,9 @@
         <option value="The Story of Tap Water">The Story of Tap Water</option>
     </select>
     <select id="districtSelect" disabled>
-        <option value="">selecet shopping district</option>
+        <option value=""></option>
     </select>
-    <div id="map" style="height: 500px; width: 100%;"></div>
+    <div id="map"></div>
 
     <script>
         let map;
@@ -50,7 +97,7 @@
         // 監聽路線選擇
         document.getElementById("routeSelect").addEventListener("change", function () {
             const districtSelect = document.getElementById("districtSelect");
-            districtSelect.innerHTML = `<option value="">請先選擇商圈</option>`;
+            districtSelect.innerHTML = `<option value="">select shopping disrict</option>`;
             const selectedRoute = this.value;
 
             if (!selectedRoute) {
@@ -61,32 +108,38 @@
             districtSelect.disabled = false; // 確保選項被啟用
 
             const districts = locationsData[selectedRoute];
-            districts.forEach((district, index) => {
-                districtSelect.innerHTML += `<option value="${index}">${district.spotName}</option>`;
-            });
+            if (districts) {
+                districts.forEach((district, index) => {
+                    districtSelect.innerHTML += `<option value="${index}">${district.spotName}</option>`;
+                });
+            }
         });
 
         // 監聽商圈選擇
         document.getElementById("districtSelect").addEventListener("change", function () {
             const selectedRoute = document.getElementById("routeSelect").value;
             const selectedDistrictIndex = this.value;
-            if (selectedRoute && selectedDistrictIndex) {
+            if (selectedRoute && selectedDistrictIndex !== "") {
                 const district = locationsData[selectedRoute][selectedDistrictIndex];
-                drawMarkersAndRoute([district], selectedRoute);
+                drawMarkersAndRoute([district]);
                 displayDescription(district);
             }
         });
 
         // 繪製標記和路線
-        function drawMarkersAndRoute(locations, route) {
+        function drawMarkersAndRoute(locations) {
             clearMarkers();
             locations.forEach(location => {
                 const latLng = { lat: location.lat, lng: location.lng };
+                map.setCenter(latLng);  // 設置地圖中心為該位置
+                map.setZoom(18); //縮放
                 const marker = new google.maps.Marker({
                     position: latLng,
                     map: map,
-                    title: location.spotName
+                    title: location.spotName,
+                    icon: `http://maps.google.com/mapfiles/ms/icons/${location.markerColor}-dot.png`
                 });
+                marker.setAnimation(google.maps.Animation.BOUNCE);
 
                 // 點擊標記後跳轉到 Google Maps
                 google.maps.event.addListener(marker, 'click', function () {
