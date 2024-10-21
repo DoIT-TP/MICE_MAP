@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅遊路線地圖</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqEBoy8tcL8KyNHwKSPPWmOZ3L7w1dWJg&libraries=places"></script>
+</head>
+<body>
+    <select id="routeSelect">
+        <option value="">請選擇旅遊路線</option>
+        <option value="偽出國，紓壓放鬆輕旅行">偽出國，紓壓放鬆輕旅行</option>
+        <option value="走靜貓空，踏青一日遊">走靜貓空，踏青一日遊</option>
+        <option value="穿越時光，探索台北城之旅">穿越時光，探索台北城之旅</option>
+        <option value="百年古蹟文化城，剝皮寮懷舊之旅">百年古蹟文化城，剝皮寮懷舊之旅</option>
+        <option value="水道水源地之旅(臺北水旅行)">水道水源地之旅(臺北水旅行)</option>
+    </select>
+    <select id="districtSelect" disabled>
+        <option value="">請先選擇旅遊路線</option>
+    </select>
+    <div id="map" style="height: 500px; width: 100%;"></div>
+
+    <script>
+        let map;
+        let directionsRenderer;
+        let markers = [];
+        let locationsData = {};
+
+        // 初始化地圖
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 25.033964, lng: 121.564468 }, // 預設台北市中心
+                zoom: 12,
+            });
+            directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
+        }
+
+        // 讀取 JSON 檔案
+        async function loadLocationsData() {
+            try {
+                const response = await fetch('bs-map.json');
+                locationsData = await response.json();
+                console.log('Locations Data Loaded:', locationsData);
+            } catch (error) {
+                console.error('Error loading locations data:', error);
+            }
+        }
+
+        // 監聽路線選擇
+        document.getElementById("routeSelect").addEventListener("change", function () {
+            const districtSelect = document.getElementById("districtSelect");
+            districtSelect.innerHTML = `<option value="">請先選擇商圈</option>`;
+            const selectedRoute = this.value;
+
+            if (!selectedRoute) {
+                districtSelect.disabled = true;
+                return;
+            }
+
+            districtSelect.disabled = false; // 確保選項被啟用
+
+            const districts = locationsData[selectedRoute];
+            districts.forEach((district, index) => {
+                districtSelect.innerHTML += `<option value="${index}">${district.spotName}</option>`;
+            });
+        });
+
+        // 監聽商圈選擇
+        document.getElementById("districtSelect").addEventListener("change", function () {
+            const selectedRoute = document.getElementById("routeSelect").value;
+            const selectedDistrictIndex = this.value;
+            if (selectedRoute && selectedDistrictIndex) {
+                const district = locationsData[selectedRoute][selectedDistrictIndex];
+                drawMarkersAndRoute([district], selectedRoute);
+                displayDescription(district);
+            }
+        });
+
+        // 繪製標記和路線
+        function drawMarkersAndRoute(locations, route) {
+            clearMarkers();
+            locations.forEach(location => {
+                const latLng = { lat: location.lat, lng: location.lng };
+                const marker = new google.maps.Marker({
+                    position: latLng,
+                    map: map,
+                    title: location.spotName
+                });
+
+                // 點擊標記後跳轉到 Google Maps
+                google.maps.event.addListener(marker, 'click', function () {
+                    window.open(`https://www.google.com/maps?q=${location.lat},${location.lng}`, '_blank');
+                });
+
+                markers.push(marker);
+            });
+        }
+
+        // 清除標記
+        function clearMarkers() {
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+        }
+
+        // 顯示描述
+        function displayDescription(district) {
+            const descriptionContainer = document.getElementById('description');
+            const imageHtml = district.imageUrl ? `<img src="${district.imageUrl}" alt="${district.spotName}" style="width: 100%; max-width: 300px;">` : '';
+            if (!descriptionContainer) {
+                const newDescriptionContainer = document.createElement('div');
+                newDescriptionContainer.id = 'description';
+                document.body.appendChild(newDescriptionContainer);
+                newDescriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imageHtml}<p>${district.description}</p>`;
+            } else {
+                descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imageHtml}<p>${district.description}</p>`;
+            }
+        }
+
+        window.onload = function () {
+            initMap();
+            loadLocationsData(); // 加載外部 JSON
+        };
+    </script>
+</body>
+</html>
