@@ -3,7 +3,6 @@
 
 <head>
     <title>MICE-遊程</title>
-    <!-- 引入必要的腳本 -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
     <script
@@ -115,10 +114,10 @@
 
     <script>
         let map;
-        let markers = []; // Array to store all map markers
-        let polylinePaths = []; // Array to store all polylines drawn on the map
-        let currentPolyline; // Currently active polyline
-        let infoWindows = []; // Array to store all info windows
+        let markers = []; 
+        let polylinePaths = []; 
+        let currentPolyline; 
+        let infoWindows = []; 
 
         function initMap() {
             // Initialize the Google Map with specified center and zoom level
