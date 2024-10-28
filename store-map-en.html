@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MICE - Merchant Map</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q&libraries=places&language=en"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q&libraries=places&language=en""></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         html, body {
@@ -172,15 +172,15 @@
         function displayDescription(district) {
             const descriptionContainer = document.getElementById('description');
             let imagesHtml = '';
+
             if (district.images && district.images.length > 0) {
                 district.images.forEach(imageUrl => {
                     imagesHtml += `<img src="${imageUrl}" alt="${district.spotName}" style="width: 100%; max-width: 300px; margin: 5px;">`;
                 });
             }
+
             descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>Address: ${district.address}</p>`;
         }
-
-
 
         window.onload = function () {
             initMap();
