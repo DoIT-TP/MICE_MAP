@@ -63,6 +63,7 @@
         <option value=""></option>
     </select>
     <div id="map"></div>
+    <div id="description"></div>
 
     <script>
         let map;
@@ -154,18 +155,27 @@
         }
 
         // 顯示描述
-        function displayDescription(district) {
-            const descriptionContainer = document.getElementById('description');
-            const imageHtml = district.imageUrl ? `<img src="${district.imageUrl}" alt="${district.spotName}" style="width: 100%; max-width: 300px;">` : '';
-            if (!descriptionContainer) {
-                const newDescriptionContainer = document.createElement('div');
-                newDescriptionContainer.id = 'description';
-                document.body.appendChild(newDescriptionContainer);
-                newDescriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imageHtml}<p>${district.description}</p>`;
-            } else {
-                descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imageHtml}<p>${district.description}</p>`;
-            }
-        }
+function displayDescription(district) {
+    const descriptionContainer = document.getElementById('description');
+    let imagesHtml = '';
+
+    // 判斷 imageUrls 是否存在，並遍歷生成圖片 HTML
+    if (district.imageUrls && district.imageUrls.length > 0) {
+        district.imageUrls.forEach(imageUrl => {
+            imagesHtml += `<img src="${imageUrl}" alt="${district.spotName}" style="width: 100%; max-width: 300px; margin-bottom: 10px;">`;
+        });
+    }
+
+    if (!descriptionContainer) {
+        const newDescriptionContainer = document.createElement('div');
+        newDescriptionContainer.id = 'description';
+        document.body.appendChild(newDescriptionContainer);
+        newDescriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>${district.description}</p>`;
+    } else {
+        descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>${district.description}</p>`;
+    }
+}
+
 
         window.onload = function () {
             initMap();
