@@ -5,18 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MICE-商家地圖</title>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q&libraries=places"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         /* 重置外邊距和內邊距 */
         html, body {
             margin: 0;
             padding: 0;
+            height: 100%;
         }
 
         /* 容器 */
         #container {
             display: flex;
             flex-direction: column;
-            height: auto;
+            height: 100%;
         }
 
         /* 地圖樣式 */
@@ -51,18 +53,21 @@
     </style>
 </head>
 <body>
-    <select id="routeSelect">
-        <option value="">請選擇旅遊路線</option>
-        <option value="紓壓放鬆輕旅行">紓壓放鬆輕旅行</option>
-        <option value="走靜貓空，踏青一日遊">走靜貓空，踏青一日遊</option>
-        <option value="穿越時光，探索台北城之旅">穿越時光，探索台北城之旅</option>
-        <option value="百年古蹟文化城，剝皮寮懷舊之旅">百年古蹟文化城，剝皮寮懷舊之旅</option>
-        <option value="水道水源地之旅(臺北水旅行)">水道水源地之旅(臺北水旅行)</option>
-    </select>
-    <select id="districtSelect" disabled>
-        <option value="">請先選擇旅遊路線</option>
-    </select>
-    <div id="map"></div>
+    <div id="container">
+        <select id="routeSelect">
+            <option value="">請選擇旅遊路線</option>
+            <option value="紓壓放鬆輕旅行">紓壓放鬆輕旅行</option>
+            <option value="走靜貓空，踏青一日遊">走靜貓空，踏青一日遊</option>
+            <option value="穿越時光，探索台北城之旅">穿越時光，探索台北城之旅</option>
+            <option value="百年古蹟文化城，剝皮寮懷舊之旅">百年古蹟文化城，剝皮寮懷舊之旅</option>
+            <option value="水道水源地之旅(臺北水旅行)">水道水源地之旅(臺北水旅行)</option>
+        </select>
+        <select id="districtSelect" disabled>
+            <option value="">請先選擇旅遊路線</option>
+        </select>
+        <div id="map"></div>
+        <div id="description"></div>
+    </div>
 
     <script>
         let map;
@@ -84,17 +89,22 @@
         async function loadLocationsData() {
             try {
                 const response = await fetch('./csv/st.csv');
-                const data = await response.text();
-                const rows = data.split('\n');
-                rows.forEach(row => {
-                    const [category, spotName, address, imageUrls, markerColor] = row.split(',');
-                    if (!locationsData[category]) {
-                        locationsData[category] = [];
+                const csvData = await response.text();
+                Papa.parse(csvData, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        results.data.forEach(row => {
+                            const { category, spotName, address, imageUrls, markerColor } = row;
+                            if (!locationsData[category]) {
+                                locationsData[category] = [];
+                            }
+                            const images = imageUrls ? imageUrls.split('|') : [];
+                            locationsData[category].push({ spotName, address, images, markerColor });
+                        });
+                        console.log('Locations Data Loaded:', locationsData);
                     }
-                    const images = imageUrls ? imageUrls.split('|') : [];
-                    locationsData[category].push({ spotName, address, images, markerColor });
                 });
-                console.log('Locations Data Loaded:', locationsData);
             } catch (error) {
                 console.error('Error loading locations data:', error);
             }
@@ -181,14 +191,7 @@
                     imagesHtml += `<img src="${imageUrl}" alt="${district.spotName}" style="width: 100%; max-width: 300px; margin: 5px;">`;
                 });
             }
-            if (!descriptionContainer) {
-                const newDescriptionContainer = document.createElement('div');
-                newDescriptionContainer.id = 'description';
-                document.body.appendChild(newDescriptionContainer);
-                newDescriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>地址: ${district.address}</p>`;
-            } else {
-                descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>地址: ${district.address}</p>`;
-            }
+            descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>地址: ${district.address}</p>`;
         }
 
         window.onload = function () {
