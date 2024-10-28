@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MICE - Merchant Map</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q&libraries=places&language=en""></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q&libraries=places&language=en"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
         html, body {
@@ -88,12 +88,12 @@
                     skipEmptyLines: true,
                     complete: function(results) {
                         results.data.forEach(row => {
-                            const { category, spotName, address, imageUrls, markerColor } = row;
+                            const { category, spotName, address, imageUrls, description, markerColor } = row;
                             if (!locationsData[category]) {
                                 locationsData[category] = [];
                             }
                             const images = imageUrls ? imageUrls.split('|') : [];
-                            locationsData[category].push({ spotName, address, images, markerColor });
+                            locationsData[category].push({ spotName, address, images, description, markerColor });
                         });
                         console.log('Locations Data Loaded:', locationsData);
                     }
@@ -179,7 +179,7 @@
                 });
             }
 
-            descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>Address: ${district.address}</p>`;
+            descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>Address: ${district.address}</p><p>Description: ${district.description || 'No description available'}</p>`;
         }
 
         window.onload = function () {
