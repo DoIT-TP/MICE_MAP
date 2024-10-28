@@ -5,7 +5,7 @@
       "lat": 25.136829,
       "lng": 121.502705,
       "description": "北投原為平埔族中的凱達格蘭族(Ketagalan)部落居住的地方，而北投即凱達格蘭語的女巫之住所，堪稱是臺北市的後花園。為打造新北投商圈品牌形象，從文化中尋找特色，以「女巫、溫泉、古樸」等文化及環境特色作為形象，並陸續以「北投溫泉季、溫泉旅展、溫泉美食…」等議題，成功置入商圈各項行銷活動中。新北投溫泉在日治時代就頗負盛名，不僅僅是熱門的聚會點，更是那卡西的發源地，在民國 50、60 年代，紅極一時。當時溫泉旅社林立，隨著環境變遷，逐漸隱沒。近年在政府規劃下，又重新找回了生命力。這裡有臺灣最老的浴池，最具代表性的溫泉建築，不需刻意營造懷舊風情，這裡本身就有濃濃的復古風味。",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/1.新北投/1.溫泉照.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/1.新北投/2.北投溫泉博物館.jpg"
       ],
@@ -18,7 +18,7 @@
       "lat": 24.968430356759765,
       "lng": 121.58795665877365,
       "description": "Maokong is the most accessible mountain suburb in Taipei City. Walking among Camphor Tree, Camphor Lake, and Chin-Nan Temple Hiking Trails, you can see lots of common animals in mid to low altitude areas in Taiwan, like horsetails, Swinhoe's snails, Swinhoe's frogs, Swinhoe's japalura, a perfect place for field trips for students. U-Theatre, Performing Arts School 36, and National Chengchi University form an art triangle here, a special cultural touring route. You can see many Tieguanyin tea gardens and creative tea houses when taking Maokong Gondola. Besides tea and scenery, you can also try plant rubbing and blue dying. It’s a leisure and relaxing back garden of Taipei City.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/9.貓空/1.貓空街景.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/9.貓空/2.指南宮站光環境.jpg"
       ],
@@ -29,7 +29,7 @@
       "lat": 25.014942,
       "lng": 121.534671,
       "description": "Gongguan Shopping District runs around National Taiwan University. It's famous for good food, coffee houses of human touch, and second-hand bookstores, a favorite place for students. Museum of Drinking Water, bike lanes alongside Xindian River, Taipei City Hakka Cultural Park, and Shuiyuan Market form a mixer of “Lohas, waterfront, and leisure” style. There are lots of artists and creative gurus in Treasure Hill Artist Village. The district is undergoing some kind of a reformation in its stores. With more characters and creativeness in stores, more customers will visit this district.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/10.臺大公館商圈/1.臺大公館商圈商品照.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/10.臺大公館商圈/2.自來水園區.jpg"
       ],
@@ -42,7 +42,7 @@
       "lat": 25.046829333906157,
       "lng": 121.57894095542049,
       "description": "Wufenpu Garment Wholesale Shopping District is the most important place in the fashion world of Taiwan. Wholesalers come here because of its easy access and the variety of products. Main products are women apparel, leather products, and shoes. There are also stores selling shoes of independent design, street wears, and stylish men apparel. The up-to-date products attract fashionable consumers. The time before Chinese New Year is always packed with shoppers.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/2.五分埔/1.五分埔街景.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/2.五分埔/2.五分埔街景.jpg"
       ],
@@ -53,7 +53,7 @@
       "lat": 25.059423804826846,
       "lng": 121.5631994139394,
       "description": "The Minsheng community shopping district is centered around the intersection of Minsheng East Road and Sanmin Road. Shops and residences are distributed along Minsheng East Road, Sanmin Road, Xinzhong Street, Fuyuan Street, Xindong Street, and Minquan East Road, which are the main thoroughfares. The variety of stores is diverse and complete, featuring well-known cafes, specialty restaurants, creative boutiques, tutoring centers, and skill classes, making it a high-quality community shopping area. Additionally, since the community is equipped with well-developed public infrastructure, offering a comprehensive range of resources for food, clothing, housing, transportation, education, and entertainment, making the  shopping district richer and more diverse . Furthermore, there are many parks and green spaces in the Minsheng community, providing ample shaded areas and creating a high-quality living environment.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/3.民生社區/1.星空電影院活動照.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/3.民生社區/2.民生商圈在地店家.jpg"
       ],
@@ -64,7 +64,7 @@
       "lat": 25.04189749566511,
       "lng": 121.54443479595805,
       "description": "Eastern Shopping District is on traffic arteries with convenient transportation. Good number of department stores bring international designer brands, filling prosperity to the district. Sports brands for young people and high-end boutiques coexist on the street, with creative goodies hidden in alleys. Young people and nine-to-fivers gather here. It’s a place of trend importance in Taipei.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/4.東區/1.東區-商品照.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/4.東區/2.東區商圈店家內裝照.jpg"
       ],
@@ -77,7 +77,7 @@
       "lat": 25.034559737599363, 
       "lng": 121.4994445677516,
       "description": "Being close to Wanhua Train Station in the early days, this is the first apparel market and wholesale place in Taiwan. It’s now over fifty years. People call it the birthplace of Taiwan apparel industry. Wholesale markets and apparel factories surround the area of Wanhua Train Station and Dali Street. There were over two thousand businesses here in its hay days. BangKa Costume Shopping District’s main products are young lady apparel, but it’s also known for mid-aged woman apparel with all kinds of evening dresses to choose from. Caesar Metro opened in 2017 at Wanhua Twin Towers. There are also attractions like Wanhua Lin Mansion and Fashion Institute of Taipei. Local and overseas visitors can all enjoy here.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/5.艋舺服飾/1.西園29創作基地.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/5.艋舺服飾/2.商圈店家-鳳衣美.jpg"
       ],
@@ -88,7 +88,7 @@
       "lat": 25.03681496352639, 
       "lng": 121.49939092357383,
       "description": "Wanhua dates back to Qing Dynasty, with many artifacts telling the history of development in Taipei. Diverse history goes along with diverse traditional snacks, oozing the traditional vibes of early Taiwan.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/6.艋舺夜市/1.艋舺夜市街景.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/6.艋舺夜市/2.艋舺夜市街景.jpg"
       ],
@@ -99,7 +99,7 @@
       "lat": 25.037440270842424,
       "lng": 121.4995377996595,
       "description": "The businesses within the Wanhua Street shopping District business circle include numerous renowned establishments, some with a history spanning a century. Situated in the birthplace of Taipei, this area boasts a rich cultural heritage and serves as a hub for the daily lives of Taipei residents. Notable landmarks include the Mengjia Longshan Temple, a must-visit attraction for international tourists in Taipei, and the Qingshan King Sacrificial Ceremony, the largest temple event in northern Taiwan. Additionally, the district features several well-known night markets, such as the Mengjia Night Market, Huaxi Street Night Market, and Guangzhou Street Night Market, offering a plethora of popular and queue-worthy culinary delights.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/7.萬華街區/1.人潮前往龍山寺站周邊.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/7.萬華街區/2.剝皮寮街景照.jpg"
       ],
@@ -110,7 +110,7 @@
       "lat": 25.042940543331728,
       "lng": 121.50772302118392,
       "description": "Ximending Shopping District is the first car-free zone in Taipei. The association of commercial district does a great job, making it the top ten international tourist attraction in Taipei. It’s the leader in old and new culture throughout Taiwan in movie industry, music industry, cultural and creative industry, creative markets, graffiti culture, the art of tattoo, street performers, animation and comic book industry, and celebrity street wear. It’s the first choice for overseas visiting delegation.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/8.西門町",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/8.西門町/2.西門町商圈街景.jpg"
       ],
@@ -121,7 +121,7 @@
       "lat": 25.03744292998076,
       "lng": 121.49943549885975,
       "description": "A section of Xiyuan Road next to Longshan Temple is home to about 20 Buddhist tools shops, in which for customers to select and compare prices. It has become Taiwan's well-known [Buddhist tools street]. In addition to selling various Buddha statue, Taoist and temple statues, other related supplies such as sacred tables, stoves, cups, lamps, sacred couplets, as well as embroidered or hand-painted Immortals such as clothing and hats, Eight Immortals Cai, table skirts, sacred currency, candles, and everything you need. Most of the old stores that have been passed down from generation to generation are run by people who is a sculptor or good craftsman who can cooperate with them. In addition, they may help customers choose auspicious days, consecrate lights, enter the house to welcome the Immortals, Respectfully arrange the location for the Immortals, and shrines. Design, statue repair, customization, rituals, etc. All services are provided by the store.",
-      "imageUrl": "https://example.com/mengjia_nightmarket.jpg",
+      "imageUrls": "https://example.com/mengjia_nightmarket.jpg",
       "markerColor": "red"
     }
   ],
@@ -131,7 +131,7 @@
       "lat": 25.014942,
       "lng": 121.534671,
       "description": "Gongguan Shopping District runs around National Taiwan University. It's famous for good food, coffee houses of human touch, and second-hand bookstores, a favorite place for students. Museum of Drinking Water, bike lanes alongside Xindian River, Taipei City Hakka Cultural Park, and Shuiyuan Market form a mixer of “Lohas, waterfront, and leisure” style. There are lots of artists and creative gurus in Treasure Hill Artist Village. The district is undergoing some kind of a reformation in its stores. With more characters and creativeness in stores, more customers will visit this district.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/10.臺大公館商圈/1.臺大公館商圈商品照.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/10.臺大公館商圈/2.自來水園區.jpg"
       ],
@@ -142,7 +142,7 @@
       "lat": 25.02737716427316, 
       "lng": 121.52033749896528,
       "description": "TNanchang Furniture Shopping District has several old stores which are being passed down to the third generation. They have art-like traditional handmade furniture, as well as modern and chic boutique ones out of younger business owners. The handmade furniture here is durable and affordable, never go out of style in more than sixty years. Those repeat customers keep coming back for more. They even offer new sales packages towards different people, such as newly-weds, nuclear family, and people who excel in their respective career.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/11.南昌家具街/1.商圈店家-我舍方.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/11.南昌家具街/2.商圈店家內裝照.jpg"
       ],
@@ -153,7 +153,7 @@
       "lat": 25.033529773898604,
       "lng": 121.53001321715011,
       "description": "This commercial district surrounds Yongkang Park. There are lots of special restaurants here. Din Tai Fung played an important role in its early development. Yongkang Street gains its fame via media coverage over the years. Many diners of Taiwanese vibes pack in small alleys. More exotic restaurants, stylish coffee houses, small shops of characters appear here afterwards. Humanities and cultures make Yongkang Street an one of its kind shopping and dining hotspot internationally.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/12.永康/1.永康商圈街景.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/12.永康/2.永康商圈店家.jpg"
       ],
@@ -164,7 +164,7 @@
       "lat": 25.033935420968835,
       "lng": 121.51849037394557,
       "description": "Photography shops once gathered here. It's close to Chiang Kai-shek Memorial Hall and its outdoor scenery, photography shops become wedding photography shops. Unlike the high-end ones on Zhongshan North Road and the cheap ones in Banqiao, Sanchong, and Xinzhuang, the wedding photography shops on Aiguo East Road lie in between.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/13.愛國東路婚紗街/1.愛國東路婚紗街店家照.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/13.愛國東路婚紗街/2.愛國東路婚紗街街景.jpg"
       ],
@@ -175,7 +175,7 @@
       "lat": 25.02497759938597,
       "lng": 121.49691859668286,
       "description": "The name 'Gara-Zai' in Wanhua, originates from the Pingpu tribe and signifies 'swamp' in the Ketagalan language. In earlier times, this area was crisscrossed by waterways. With the sedimentation of the Xindian River, the land became fertile, and early settlers dwelled by the water. They cultivated economic crops such as bean sprouts, jasmine flowers, and bamboo shoots. However, with the development of the modern city, the once soft and fertile fields were paved over with asphalt, natural springs were covered with concrete, and the waterfront villages moved behind high embankments. Gradually, people began to forget the memories of being nurtured by river and land. The Gara Shopping District forms a hub in the living circle pattern. Its components are scattered like stars, aspiring to thrive in the earliest developed southern region of Taipei city. With the upcoming completion of the Wanda Line of the MRT and an improved future of transportation network, there is a vision for a revitalization, merging a robust lifestyle, commercial exchange, the dynamic energy of traditional markets, and cultural memories.",
-      "imageUrl": [
+      "imageUrls": [
         "https://doit-tp.github.io/MICE_MAP/media/商圈/14.加蚋/1.在加生活節.jpg",
         "https://doit-tp.github.io/MICE_MAP/media/商圈/media/商圈/14.加蚋/2.加蚋商圈街景.jpg"
       ],
