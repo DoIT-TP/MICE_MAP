@@ -10,12 +10,13 @@
         html, body {
             margin: 0;
             padding: 0;
+            height: 100%;
         }
 
         #container {
             display: flex;
             flex-direction: column;
-            height: auto;
+            height: 100%;
         }
 
         #map {
@@ -47,18 +48,21 @@
     </style>
 </head>
 <body>
-    <select id="routeSelect">
-        <option value="">Select MICE tour</option>
-        <option value="A Relaxing Stress-Relief Getaway">A Relaxing Stress-Relief Getaway</option>
-        <option value="Tranquil Maokong: A Day of Nature Walks">Tranquil Maokong: A Day of Nature Walks</option>
-        <option value="Passing Through the Time: An Exploration Journey of Taipei City">Passing Through the Time: An Exploration Journey of Taipei City</option>
-        <option value="Century-Old Cultural Tour: Bopiliao Nostalgia">Century-Old Cultural Tour: Bopiliao Nostalgia</option>
-        <option value="The Story of Tap Water">The Story of Tap Water</option>
-    </select>
-    <select id="districtSelect" disabled>
-        <option value="">Please select a tour first</option>
-    </select>
-    <div id="map"></div>
+    <div id="container">
+        <select id="routeSelect">
+            <option value="">Select MICE tour</option>
+            <option value="A Relaxing Stress-Relief Getaway">A Relaxing Stress-Relief Getaway</option>
+            <option value="Tranquil Maokong: A Day of Nature Walks">Tranquil Maokong: A Day of Nature Walks</option>
+            <option value="Passing Through the Time: An Exploration Journey of Taipei City">Passing Through the Time: An Exploration Journey of Taipei City</option>
+            <option value="Century-Old Cultural Tour: Bopiliao Nostalgia">Century-Old Cultural Tour: Bopiliao Nostalgia</option>
+            <option value="The Story of Tap Water">The Story of Tap Water</option>
+        </select>
+        <select id="districtSelect" disabled>
+            <option value="">Please select a tour first</option>
+        </select>
+        <div id="map"></div>
+        <div id="description"></div>
+    </div>
 
     <script>
         let map;
@@ -173,14 +177,7 @@
                     imagesHtml += `<img src="${imageUrl}" alt="${district.spotName}" style="width: 100%; max-width: 300px; margin: 5px;">`;
                 });
             }
-            if (!descriptionContainer) {
-                const newDescriptionContainer = document.createElement('div');
-                newDescriptionContainer.id = 'description';
-                document.body.appendChild(newDescriptionContainer);
-                newDescriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>Address: ${district.address}</p>`;
-            } else {
-                descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>Address: ${district.address}</p>`;
-            }
+            descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>Address: ${district.address}</p>`;
         }
 
         window.onload = function () {
