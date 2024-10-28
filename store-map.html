@@ -87,11 +87,12 @@
                 const data = await response.text();
                 const rows = data.split('\n');
                 rows.forEach(row => {
-                    const [category, spotName, address, imageUrl, markerColor] = row.split(',');
+                    const [category, spotName, address, imageUrls, markerColor] = row.split(',');
                     if (!locationsData[category]) {
                         locationsData[category] = [];
                     }
-                    locationsData[category].push({ spotName, address, imageUrl, markerColor });
+                    const images = imageUrls ? imageUrls.split('|') : [];
+                    locationsData[category].push({ spotName, address, images, markerColor });
                 });
                 console.log('Locations Data Loaded:', locationsData);
             } catch (error) {
@@ -174,14 +175,19 @@
         // 顯示描述
         function displayDescription(district) {
             const descriptionContainer = document.getElementById('description');
-            const imageHtml = district.imageUrl ? `<img src="${district.imageUrl}" alt="${district.spotName}" style="width: 100%; max-width: 300px;">` : '';
+            let imagesHtml = '';
+            if (district.images && district.images.length > 0) {
+                district.images.forEach(imageUrl => {
+                    imagesHtml += `<img src="${imageUrl}" alt="${district.spotName}" style="width: 100%; max-width: 300px; margin: 5px;">`;
+                });
+            }
             if (!descriptionContainer) {
                 const newDescriptionContainer = document.createElement('div');
                 newDescriptionContainer.id = 'description';
                 document.body.appendChild(newDescriptionContainer);
-                newDescriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imageHtml}<p>地址: ${district.address}</p>`;
+                newDescriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>地址: ${district.address}</p>`;
             } else {
-                descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imageHtml}<p>地址: ${district.address}</p>`;
+                descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>地址: ${district.address}</p>`;
             }
         }
 
