@@ -154,18 +154,18 @@
             markers = [];
         }
 
-// 顯示描述
 function displayDescription(district) {
     const descriptionContainer = document.getElementById('description');
     let imagesHtml = '';
 
-    // 判斷 imageUrls 是否存在，並遍歷生成圖片 HTML
+    // 判斷 imageUrls 是否存在且非空陣列，並遍歷生成圖片 HTML
     if (district.imageUrls && district.imageUrls.length > 0) {
         district.imageUrls.forEach(imageUrl => {
             imagesHtml += `<img src="${imageUrl}" alt="${district.spotName}" style="width: 100%; max-width: 300px; margin-bottom: 10px;">`;
         });
     }
 
+    // 即使沒有圖片，仍顯示標題和描述
     if (!descriptionContainer) {
         const newDescriptionContainer = document.createElement('div');
         newDescriptionContainer.id = 'description';
@@ -175,6 +175,7 @@ function displayDescription(district) {
         descriptionContainer.innerHTML = `<h3>${district.spotName}</h3>${imagesHtml}<p>${district.description}</p>`;
     }
 }
+
 
 
         window.onload = function () {
