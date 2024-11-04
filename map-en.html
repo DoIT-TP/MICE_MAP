@@ -131,7 +131,7 @@
             // 清除地圖上的標記和線條
             clearMap();
             // 添加標題到景點資訊區塊
-            document.getElementById('tour-info').innerHTML = `<h2><a href="${tourUrl}" target="_blank">${tourName}</a></h2>`;
+            document.getElementById('tour-info').innerHTML = `<h2>${tourName}</h2>`;
             fetch('./csv/' + csvFile)
                 .then(response => response.text())
                 .then(csvData => {
