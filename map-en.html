@@ -133,7 +133,7 @@
 
         function loadTour(csvFile, polylineColor, markerIcon, tourName, tourUrl) {
             clearMap();
-            document.getElementById('tour-info').innerHTML = `<h2>${tourName} (路線顏色：<span style='color:${polylineColor}'>${getColorName(polylineColor)}</span>)</h2>`;
+            document.getElementById('tour-info').innerHTML = `<h2>${tourName} (Tour Color：<span style='color:${polylineColor}'>${getColorName(polylineColor)}</span>)</h2>`;
             hasSetMapCenter = false;
             districts.clear();
             fetch('./csv/' + csvFile)
@@ -151,12 +151,12 @@
 
         function getColorName(hexColor) {
             switch (hexColor) {
-                case '#FF0000': return '紅色';
-                case '#00FF00': return '綠色';
-                case '#0000FF': return '藍色';
-                case '#FFFF00': return '黃色';
-                case '#FF00FF': return '紫色';
-                default: return '未知顏色';
+                case '#FF0000': return 'Red';
+                case '#00FF00': return 'Green';
+                case '#0000FF': return 'Blue';
+                case '#FFFF00': return 'Yellow';
+                case '#FF00FF': return 'Purple';
+                default: return 'Null';
             }
         }
 
