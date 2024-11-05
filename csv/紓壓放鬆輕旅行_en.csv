@@ -1,8 +1,8 @@
-編號,景點名稱,地址,網址
+編號,景點名稱,地址,網址,行政區
 1,Taipei Sightseeing Bus,,https://www.taipeisightseeing.com.tw/
-2,National Palace Museum,4G2X+GW 臨溪里 台北市士林區,https://www.travel.taipei/en/attraction/details/441
-3,Xinbeitou Station,4GP3+M9 中心里 台北市北投區,https://www.travel.taipei/en/attraction/details/2011
-4,Beitou Library,4GP4+HG 長安里 台北市北投區,https://www.travel.taipei/en/attraction/details/538
-5,Beitou Hot Spring Museum,4GP4+JV 林泉里 台北市北投區,https://hotspringmuseum.taipei/?locale=en
-6,Puji Temple,4GP6+9F 林泉里 台北市北投區,https://www.travel.taipei/en/attraction/details/485
-7,Xinbeitou Hot Spring Area,4GP5+RJ2 林泉里 台北市北投區,https://www.travel.taipei/en/attraction/details/436
+2,National Palace Museum,4G2X+GW 臨溪里 台北市士林區,https://www.travel.taipei/en/attraction/details/44,Shilin District
+3,Xinbeitou Station,4GP3+M9 中心里 台北市北投區,https://www.travel.taipei/en/attraction/details/2011,Beitou District
+4,Beitou Library,4GP4+HG 長安里 台北市北投區,https://www.travel.taipei/en/attraction/details/538,Beitou District
+5,Beitou Hot Spring Museum,4GP4+JV 林泉里 台北市北投區,https://hotspringmuseum.taipei/?locale=en,Beitou District
+6,Puji Temple,4GP6+9F 林泉里 台北市北投區,https://www.travel.taipei/en/attraction/details/485,Beitou District
+7,Xinbeitou Hot Spring Area,4GP5+RJ2 林泉里 台北市北投區,https://www.travel.taipei/en/attraction/details/436,Beitou District
