@@ -3,7 +3,7 @@
 
 <head>
     <title>MICE-遊程</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqSUQnl7fZlPS1rWDwG2Focfig-lWIO9Q&language=en"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqEBoy8tcL8KyNHwKSPPWmOZ3L7w1dWJg&language=en"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
     <script
         src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
@@ -98,15 +98,15 @@
     <div id="container">
         <div id="button-container">
             <button
-                onclick="loadTour('剝皮寮懷舊之旅_en.csv', '#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', 'The Architectural Culture of Century-old Historic Sites', 'https://www.travel.taipei/zh-tw/fun/tour/details/1286')">The Architectural Culture of Century-old Historic Sites</button>
+                onclick="loadTour('剝皮寮懷舊之旅_en.csv', '#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', 'The Architectural Culture of Century-old Historic Sites')">The Architectural Culture of Century-old Historic Sites</button>
             <button
-                onclick="loadTour('水道水源地之旅_en.csv', '#00FF00', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png', 'The Story of Tap Water', 'https://www.travel.taipei/zh-tw/fun/tour/details/1288')">The Story of Tap Water</button>
+                onclick="loadTour('水道水源地之旅_en.csv', '#00FF00', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png', 'The Story of Tap Water')">The Story of Tap Water</button>
             <button
-                onclick="loadTour('踏青一日遊_en.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', 'Tranquil Maokong: A Day of Nature Walks', 'https://www.travel.taipei/zh-tw/fun/tour/details/1287')">Tranquil Maokong: A Day of Nature Walks</button>
+                onclick="loadTour('踏青一日遊_en.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', 'Tranquil Maokong: A Day of Nature Walks')">Tranquil Maokong: A Day of Nature Walks</button>
             <button
-                onclick="loadTour('穿越時光_en.csv', '#FFFF00', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png', 'Passing Through the Time: An Exploration Journey of Taipei City', 'https://www.travel.taipei/zh-tw/fun/tour/details/1284')">Passing Through the Time: An Exploration Journey of Taipei City</button>
+                onclick="loadTour('穿越時光_en.csv', '#FFFF00', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png', 'Passing Through the Time: An Exploration Journey of Taipei City')">Passing Through the Time: An Exploration Journey of Taipei City</button>
             <button
-                onclick="loadTour('紓壓放鬆輕旅行_en.csv', '#FF00FF', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png', 'A Relaxing Stress-Relief Getaway', 'https://www.travel.taipei/zh-tw/fun/tour/details/1283')">A Relaxing Stress-Relief Getaway</button>
+                onclick="loadTour('紓壓放鬆輕旅行_en.csv', '#FF00FF', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png', 'A Relaxing Stress-Relief Getaway')">A Relaxing Stress-Relief Getaway</button>
         </div>
         <div id="map"></div>
         <div id="tour-info"></div>
@@ -118,6 +118,7 @@
         let polylinePaths = []; 
         let currentPolyline; 
         let infoWindows = []; 
+        let hasSetMapCenter = false; // 用來追蹤是否已設定地圖中心
 
         function initMap() {
             // Initialize the Google Map with specified center and zoom level
@@ -127,11 +128,12 @@
             });
         }
 
-        function loadTour(csvFile, polylineColor, markerIcon, tourName ,tourUrl) {
-            // 清除地圖上的標記和線條
+        function loadTour(csvFile, polylineColor, markerIcon, tourName, tourUrl) {
+            // 清除地圖上的標記和線條，但保留旅遊資訊的顯示
             clearMap();
             // 添加標題到景點資訊區塊
             document.getElementById('tour-info').innerHTML = `<h2>${tourName}</h2>`;
+            hasSetMapCenter = false; // 重置地圖中心設定
             fetch('./csv/' + csvFile)
                 .then(response => response.text())
                 .then(csvData => {
@@ -157,68 +159,88 @@
             data.reduce((promise, location, index) => {
                 return promise.then(() => {
                     return new Promise((resolve, reject) => {
+                        let lat = location['Latitude'];
+                        let lng = location['Longitude'];
                         let address = location['PlusCodes'] || location['地址'];
                         let id = location['編號'];
                         let spotName = location['景點名稱'];
                         let spotUrl = location['網址'];
 
-                        geocoder.geocode({ 'address': address }, function (results, status) {
-                            if (status === 'OK') {
-                                const marker = new google.maps.Marker({
-                                    position: results[0].geometry.location,
-                                    map: map,
-                                    icon: markerIcon,
-                                    title: `${id}: ${spotName}`
-                                });
-                                markers.push(marker);
-
-                            if (index === 0) {
-                                const enlargedIcon = {
-                                    url: markerIcon, // 使用與其他地標相同的圖標
-                                    scaledSize: new google.maps.Size(50, 50) // 調整圖標大小，原始大小通常為 20x20
-                                };
-                                marker.setIcon(enlargedIcon);
-                                marker.setAnimation(google.maps.Animation.BOUNCE);
-                                // 設置地圖中心為起點位置
-                                map.setCenter(results[0].geometry.location);
-                                // 調整地圖縮放級別
-                                map.setZoom(12);
-                            }
-
-
-                                let infoWindowContent = `<div><strong>${spotName}</strong><br>${address}</div>`;
-                                const infoWindow = new google.maps.InfoWindow({
-                                    content: infoWindowContent
-                                });
-                                infoWindows.push(infoWindow);
-
-                                marker.addListener('click', () => {
-                                    let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
-                                    window.open(mapsUrl, '_blank');
-                                });
-
-                                polylineCoordinates.push(results[0].geometry.location);
-
-                                let tourInfoDiv = document.getElementById('tour-info');
-                                let spotElement = document.createElement('div');
-                                spotElement.innerHTML = `<span>${index + 1}. </span><a href="${spotUrl}" target="_blank">${spotName}</a>`;
-                                if (index < data.length - 1) {
-                                    spotElement.innerHTML += ' <span>&#x279E;</span> '; // Add right arrow between items
+                        // 如果是需要標示在地圖上的景點
+                        if (lat && lng) {
+                            const position = { lat: parseFloat(lat), lng: parseFloat(lng) };
+                            addMarker(position, markerIcon, id, spotName, address, spotUrl, index);
+                            polylineCoordinates.push(position);
+                            resolve();
+                        } else if (address) {
+                            // 如果有地址，則進行地理編碼
+                            geocoder.geocode({ 'address': address }, function (results, status) {
+                                if (status === 'OK') {
+                                    const position = results[0].geometry.location;
+                                    addMarker(position, markerIcon, id, spotName, address, spotUrl, index);
+                                    polylineCoordinates.push(position);
+                                } else {
+                                    console.error(`Geocode failed for address: ${address}, status: ${status}`);
                                 }
-                                tourInfoDiv.appendChild(spotElement);
-
                                 resolve();
-                            } else {
-                                console.error(`Geocode failed for address: ${address}, status: ${status}`);
-                                resolve();
-                            }
-                        });
+                            });
+                        } else {
+                            // 如果沒有地址或經緯度，只出現在旅遊資訊中
+                            addSpotToTourInfo(spotName, spotUrl, index);
+                            resolve();
+                        }
                     });
                 });
             }, Promise.resolve()).then(() => {
                 // Once all locations are geocoded, draw the polyline
                 drawPolyline(polylineCoordinates, polylineColor);
             });
+        }
+
+        function addMarker(position, markerIcon, id, spotName, address, spotUrl, index) {
+            const marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                icon: markerIcon,
+                title: `${id}: ${spotName}`
+            });
+            markers.push(marker);
+
+            // 如果這是第一個有效的地點，設置地圖中心
+            if (!hasSetMapCenter) {
+                const enlargedIcon = {
+                    url: markerIcon,
+                    scaledSize: new google.maps.Size(50, 50)
+                };
+                marker.setIcon(enlargedIcon);
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                map.setCenter(position);
+                map.setZoom(12);
+                hasSetMapCenter = true; // 標記已設定地圖中心
+            }
+
+            let infoWindowContent = `<div><strong>${spotName}</strong><br>${address}</div>`;
+            const infoWindow = new google.maps.InfoWindow({
+                content: infoWindowContent
+            });
+            infoWindows.push(infoWindow);
+
+            marker.addListener('click', () => {
+                let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+                window.open(mapsUrl, '_blank');
+            });
+
+            addSpotToTourInfo(spotName, spotUrl, index);
+        }
+
+        function addSpotToTourInfo(spotName, spotUrl, index) {
+            let tourInfoDiv = document.getElementById('tour-info');
+            let spotElement = document.createElement('div');
+            spotElement.innerHTML = `<span>${index + 1}. </span><a href="${spotUrl}" target="_blank">${spotName}</a>`;
+            if (index < tourInfoDiv.children.length - 1) {
+                spotElement.innerHTML += ' <span>&#x279E;</span> ';
+            }
+            tourInfoDiv.appendChild(spotElement);
         }
 
         function drawPolyline(coordinates, color) {
