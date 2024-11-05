@@ -8,7 +8,7 @@
     <script
         src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
     </script>
-        <style>
+    <style>
         html,
         body {
             margin: 0;
@@ -35,7 +35,7 @@
             padding: 10px;
             background-color: #f9f9f9;
             border-top: 1px solid #ccc;
-            display: flex;
+            display: none;
             flex-direction: column;
         }
 
@@ -100,41 +100,70 @@
 <body>
     <div id="container">
         <div id="button-container">
-            <button
+            <button style="color: #FF0000"
                 onclick="loadTour('剝皮寮懷舊之旅_en.csv', '#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', 'The Architectural Culture of Century-old Historic Sites')">The Architectural Culture of Century-old Historic Sites</button>
-            <button
-                onclick="loadTour('水道水源地之旅_en.csv', '#00FF00', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png', 'The Story of Tap Water')">The Story of Tap Water</button>
-            <button
+            <button style="color: #008000"
+                onclick="loadTour('水道水源地之旅_en.csv', '#008000', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png', 'The Story of Tap Water')">The Story of Tap Water</button>
+            <button style="color: #0000FF"
                 onclick="loadTour('踏青一日遊_en.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', 'Tranquil Maokong: A Day of Nature Walks')">Tranquil Maokong: A Day of Nature Walks</button>
-            <button
-                onclick="loadTour('穿越時光_en.csv', '#FFFF00', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png', 'Passing Through the Time: An Exploration Journey of Taipei City')">Passing Through the Time: An Exploration Journey of Taipei City</button>
-            <button
-                onclick="loadTour('紓壓放鬆輕旅行_en.csv', '#FF00FF', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png', 'A Relaxing Stress-Relief Getaway')">A Relaxing Stress-Relief Getaway</button>
+            <button style="color: #FFA500"
+                onclick="loadTour('穿越時光_en.csv', '#FFA500', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png', 'Passing Through the Time: An Exploration Journey of Taipei City')">Passing Through the Time: An Exploration Journey of Taipei City</button>
+            <button style="color: #a600ff"
+                onclick="loadTour('紓壓放鬆輕旅行_en.csv', '#a600ff', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png', 'A Relaxing Stress-Relief Getaway')">A Relaxing Stress-Relief Getaway</button>
         </div>
         <div id="map"></div>
         <div id="tour-info"></div>
     </div>
 
-        <script>
+    <script>
         let map;
         let markers = []; 
         let polylinePaths = []; 
-        let currentPolyline; 
         let infoWindows = []; 
-        let hasSetMapCenter = false;
         let districts = new Set();
 
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: 25.0330, lng: 121.5654 },
-                zoom: 12
+                zoom: 12,
+                styles: [
+                    {
+                        featureType: 'transit',
+                        elementType: 'geometry',
+                        stylers: [{ visibility: 'off' }]
+                    }
+                ]
+            });
+            loadAllTours();
+        }
+
+        function loadAllTours() {
+            const tours = [
+                { csvFile: '剝皮寮懷舊之旅_en.csv', color: '#FF0000', icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' },
+                { csvFile: '水道水源地之旅_en.csv', color: '#008000', icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png' },
+                { csvFile: '踏青一日遊_en.csv', color: '#0000FF', icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' },
+                { csvFile: '穿越時光_en.csv', color: '#FFA500', icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png' },
+                { csvFile: '紓壓放鬆輕旅行_en.csv', color: '#a600ff', icon: 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png' }
+            ];
+
+            tours.forEach(tour => {
+                fetch('./csv/' + tour.csvFile)
+                    .then(response => response.text())
+                    .then(csvData => {
+                        Papa.parse(csvData, {
+                            header: true,
+                            dynamicTyping: true,
+                            complete: function (results) {
+                                plotLocations(results.data, tour.color, tour.icon);
+                            }
+                        });
+                    });
             });
         }
 
-        function loadTour(csvFile, polylineColor, markerIcon, tourName, tourUrl) {
-            clearMap();
+        function loadTour(csvFile, polylineColor, markerIcon, tourName) {
+            document.getElementById('tour-info').style.display = 'flex';
             document.getElementById('tour-info').innerHTML = `<h2>${tourName} (Tour Color：<span style='color:${polylineColor}'>${getColorName(polylineColor)}</span>)</h2>`;
-            hasSetMapCenter = false;
             districts.clear();
             fetch('./csv/' + csvFile)
                 .then(response => response.text())
@@ -143,7 +172,8 @@
                         header: true,
                         dynamicTyping: true,
                         complete: function (results) {
-                            plotLocations(results.data, polylineColor, markerIcon);
+                            clearMap();
+                            plotLocations(results.data, polylineColor, markerIcon, true);
                         }
                     });
                 });
@@ -152,15 +182,15 @@
         function getColorName(hexColor) {
             switch (hexColor) {
                 case '#FF0000': return 'Red';
-                case '#00FF00': return 'Green';
+                case '#008000': return 'Green';
                 case '#0000FF': return 'Blue';
-                case '#FFFF00': return 'Yellow';
-                case '#FF00FF': return 'Purple';
+                case '#FFA500': return 'Yellow';
+                case '#a600ff': return 'Purple';
                 default: return 'Null';
             }
         }
 
-        function plotLocations(data, polylineColor, markerIcon) {
+        function plotLocations(data, polylineColor, markerIcon, setMapCenter = false) {
             data = data.filter(entry => entry && entry['景點名稱']);
 
             let polylineCoordinates = [];
@@ -203,6 +233,9 @@
                 });
             }, Promise.resolve()).then(() => {
                 drawPolyline(polylineCoordinates, polylineColor);
+                if (setMapCenter) {
+                    setMapCenterFunction(polylineCoordinates);
+                }
                 addDistrictInfo();
             });
         }
@@ -222,21 +255,19 @@
                     className: 'marker-label-black-border'
                 }
             });
-            markers.push(marker);
 
-            if (!hasSetMapCenter) {
+            if (index === 0 || index === 1) {
                 const enlargedIcon = {
                     url: markerIcon,
                     scaledSize: new google.maps.Size(50, 50)
                 };
                 marker.setIcon(enlargedIcon);
                 marker.setAnimation(google.maps.Animation.BOUNCE);
-                map.setCenter(position);
-                map.setZoom(12);
-                hasSetMapCenter = true;
             }
 
-            let infoWindowContent = `<div><strong>${spotName}</strong><br>${address}<br>行政區：${district}</div>`;
+            markers.push(marker);
+
+            let infoWindowContent = `<div><strong>${spotName}</strong><br>${address}<br>District: ${district}</div>`;
             const infoWindow = new google.maps.InfoWindow({
                 content: infoWindowContent
             });
@@ -269,15 +300,22 @@
         }
 
         function drawPolyline(coordinates, color) {
-            currentPolyline = new google.maps.Polyline({
+            const polyline = new google.maps.Polyline({
                 path: coordinates,
                 geodesic: true,
                 strokeColor: color,
                 strokeOpacity: 1.0,
                 strokeWeight: 2
             });
-            currentPolyline.setMap(map);
-            polylinePaths.push(currentPolyline);
+            polyline.setMap(map);
+            polylinePaths.push(polyline);
+        }
+
+        function setMapCenterFunction(coordinates) {
+            if (coordinates.length > 0) {
+                map.setCenter(coordinates[0]);
+                map.setZoom(14);
+            }
         }
 
         function clearMap() {
