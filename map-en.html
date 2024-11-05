@@ -112,16 +112,16 @@
         <div id="tour-info"></div>
     </div>
 
-    <script>
+        <script>
         let map;
         let markers = []; 
         let polylinePaths = []; 
         let currentPolyline; 
         let infoWindows = []; 
-        let hasSetMapCenter = false; // 用來追蹤是否已設定地圖中心
+        let hasSetMapCenter = false;
+        let districts = new Set();
 
         function initMap() {
-            // Initialize the Google Map with specified center and zoom level
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: 25.0330, lng: 121.5654 },
                 zoom: 12
@@ -129,28 +129,35 @@
         }
 
         function loadTour(csvFile, polylineColor, markerIcon, tourName, tourUrl) {
-            // 清除地圖上的標記和線條，但保留旅遊資訊的顯示
             clearMap();
-            // 添加標題到景點資訊區塊
-            document.getElementById('tour-info').innerHTML = `<h2>${tourName}</h2>`;
-            hasSetMapCenter = false; // 重置地圖中心設定
+            document.getElementById('tour-info').innerHTML = `<h2>${tourName} (路線顏色：<span style='color:${polylineColor}'>${getColorName(polylineColor)}</span>)</h2>`;
+            hasSetMapCenter = false;
+            districts.clear();
             fetch('./csv/' + csvFile)
                 .then(response => response.text())
                 .then(csvData => {
-                    // 解析 CSV 資料
                     Papa.parse(csvData, {
                         header: true,
                         dynamicTyping: true,
                         complete: function (results) {
-                            // 繪製景點
                             plotLocations(results.data, polylineColor, markerIcon);
                         }
                     });
                 });
         }
 
+        function getColorName(hexColor) {
+            switch (hexColor) {
+                case '#FF0000': return '紅色';
+                case '#00FF00': return '綠色';
+                case '#0000FF': return '藍色';
+                case '#FFFF00': return '黃色';
+                case '#FF00FF': return '紫色';
+                default: return '未知顏色';
+            }
+        }
+
         function plotLocations(data, polylineColor, markerIcon) {
-            // 過濾空的資料項
             data = data.filter(entry => entry && entry['景點名稱']);
 
             let polylineCoordinates = [];
@@ -165,19 +172,20 @@
                         let id = location['編號'];
                         let spotName = location['景點名稱'];
                         let spotUrl = location['網址'];
+                        let district = location['行政區'] || '';
 
-                        // 如果是需要標示在地圖上的景點
+                        if (district) districts.add(district);
+
                         if (lat && lng) {
                             const position = { lat: parseFloat(lat), lng: parseFloat(lng) };
-                            addMarker(position, markerIcon, id, spotName, address, spotUrl, index);
+                            addMarker(position, markerIcon, id, spotName, address, spotUrl, index, district);
                             polylineCoordinates.push(position);
                             resolve();
                         } else if (address) {
-                            // 如果有地址，則進行地理編碼
                             geocoder.geocode({ 'address': address }, function (results, status) {
                                 if (status === 'OK') {
                                     const position = results[0].geometry.location;
-                                    addMarker(position, markerIcon, id, spotName, address, spotUrl, index);
+                                    addMarker(position, markerIcon, id, spotName, address, spotUrl, index, district);
                                     polylineCoordinates.push(position);
                                 } else {
                                     console.error(`Geocode failed for address: ${address}, status: ${status}`);
@@ -185,28 +193,34 @@
                                 resolve();
                             });
                         } else {
-                            // 如果沒有地址或經緯度，只出現在旅遊資訊中
-                            addSpotToTourInfo(spotName, spotUrl, index);
+                            addSpotToTourInfo(spotName, spotUrl, index, district);
                             resolve();
                         }
                     });
                 });
             }, Promise.resolve()).then(() => {
-                // Once all locations are geocoded, draw the polyline
                 drawPolyline(polylineCoordinates, polylineColor);
+                addDistrictInfo();
             });
         }
 
-        function addMarker(position, markerIcon, id, spotName, address, spotUrl, index) {
+        function addMarker(position, markerIcon, id, spotName, address, spotUrl, index, district) {
+            const markerLabel = `${id}`;
             const marker = new google.maps.Marker({
                 position: position,
                 map: map,
                 icon: markerIcon,
-                title: `${id}: ${spotName}`
+                title: `${id}: ${spotName}`,
+                label: {
+                    text: `${id}`,
+                    color: "#FFFFFF",
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    className: 'marker-label-black-border'
+                }
             });
             markers.push(marker);
 
-            // 如果這是第一個有效的地點，設置地圖中心
             if (!hasSetMapCenter) {
                 const enlargedIcon = {
                     url: markerIcon,
@@ -216,10 +230,10 @@
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 map.setCenter(position);
                 map.setZoom(12);
-                hasSetMapCenter = true; // 標記已設定地圖中心
+                hasSetMapCenter = true;
             }
 
-            let infoWindowContent = `<div><strong>${spotName}</strong><br>${address}</div>`;
+            let infoWindowContent = `<div><strong>${spotName}</strong><br>${address}<br>行政區：${district}</div>`;
             const infoWindow = new google.maps.InfoWindow({
                 content: infoWindowContent
             });
@@ -230,10 +244,10 @@
                 window.open(mapsUrl, '_blank');
             });
 
-            addSpotToTourInfo(spotName, spotUrl, index);
+            addSpotToTourInfo(spotName, spotUrl, index, district);
         }
 
-        function addSpotToTourInfo(spotName, spotUrl, index) {
+        function addSpotToTourInfo(spotName, spotUrl, index, district) {
             let tourInfoDiv = document.getElementById('tour-info');
             let spotElement = document.createElement('div');
             spotElement.innerHTML = `<span>${index + 1}. </span><a href="${spotUrl}" target="_blank">${spotName}</a>`;
@@ -241,6 +255,14 @@
                 spotElement.innerHTML += ' <span>&#x279E;</span> ';
             }
             tourInfoDiv.appendChild(spotElement);
+        }
+
+        function addDistrictInfo() {
+            let tourInfoDiv = document.getElementById('tour-info');
+            let districtsArray = Array.from(districts);
+            let districtInfo = document.createElement('div');
+            districtInfo.innerHTML = `<strong>District：</strong> ${districtsArray.join('、')}`;
+            tourInfoDiv.appendChild(districtInfo);
         }
 
         function drawPolyline(coordinates, color) {
