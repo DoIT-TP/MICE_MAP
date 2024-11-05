@@ -8,7 +8,7 @@
     <script
         src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
     </script>
-    <style>
+        <style>
         html,
         body {
             margin: 0;
@@ -36,9 +36,7 @@
             background-color: #f9f9f9;
             border-top: 1px solid #ccc;
             display: flex;
-            flex-direction: row;
-            align-items: center;
-            flex-wrap: wrap;
+            flex-direction: column;
         }
 
         #tour-info h2 {
@@ -84,14 +82,19 @@
             #tour-info div {
                 margin-bottom: 10px;
             }
+
             #container {
                 height: auto;
             }
+
             #map {
                 height: 50vh;
             }
         }
-    </style>
+        .marker-label-black-border {
+        text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+    }
+</style>
 </head>
 
 <body>
