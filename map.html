@@ -108,8 +108,8 @@
                 onclick="focusTour('濕地協會特色遊程- 走靜貓空，踏青一日遊.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', '走靜貓空，踏青一日遊', 'https://www.travel.taipei/zh-tw/fun/tour/details/1287')">走靜貓空，踏青一日遊</button>
             <button style="color: #FFA500"
                 onclick="focusTour('濕地協會特色遊程- 穿越時光，探索台北城之旅.csv', '#FFA500', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png', '穿越時光，探索台北城之旅', 'https://www.travel.taipei/zh-tw/fun/tour/details/1284')">穿越時光，探索台北城之旅</button>
-            <button style="color: #FF00FF"
-                onclick="focusTour('濕地協會特色遊程- 紓壓放鬆輕旅行.csv', '#FF00FF', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png', '紓壓放鬆輕旅行', 'https://www.travel.taipei/zh-tw/fun/tour/details/1283')">紓壓放鬆輕旅行</button>
+            <button style="color: #a600ff"
+                onclick="focusTour('濕地協會特色遊程- 紓壓放鬆輕旅行.csv', '#a600ff', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png', '紓壓放鬆輕旅行', 'https://www.travel.taipei/zh-tw/fun/tour/details/1283')">紓壓放鬆輕旅行</button>
         </div>
         <div id="map"></div>
         <div id="tour-info"></div>
@@ -143,7 +143,7 @@
                 { csvFile: '濕地協會特色遊程- 水道水源地之旅(臺北水旅行).csv', color: '#008000', icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png' },
                 { csvFile: '濕地協會特色遊程- 走靜貓空，踏青一日遊.csv', color: '#0000FF', icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' },
                 { csvFile: '濕地協會特色遊程- 穿越時光，探索台北城之旅.csv', color: '#FFA500', icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png' },
-                { csvFile: '濕地協會特色遊程- 紓壓放鬆輕旅行.csv', color: '#FF00FF', icon: 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png' }
+                { csvFile: '濕地協會特色遊程- 紓壓放鬆輕旅行.csv', color: '#a600ff', icon: 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png' }
             ];
 
             tours.forEach(tour => {
@@ -185,7 +185,7 @@
                 case '#008000': return '綠色';
                 case '#0000FF': return '藍色';
                 case '#FFA500': return '黃色';
-                case '#FF00FF': return '紫色';
+                case '#a600ff': return '紫色';
                 default: return '未知顏色';
             }
         }
