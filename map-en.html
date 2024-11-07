@@ -3,11 +3,12 @@
 
 <head>
     <title>MICE-遊程</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqEBoy8tcL8KyNHwKSPPWmOZ3L7w1dWJg&language=en"></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqEBoy8tcL8KyNHwKSPPWmOZ3L7w1dWJg&language=en"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
     <script
         src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-    </script>
+        </script>
     <style>
         html,
         body {
@@ -91,25 +92,31 @@
                 height: 50vh;
             }
         }
+
         .marker-label-black-border {
-        text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
-    }
-</style>
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+        }
+    </style>
 </head>
 
 <body>
     <div id="container">
         <div id="button-container">
             <button style="color: #FF0000"
-                onclick="loadTour('剝皮寮懷舊之旅_en.csv', '#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', 'The Architectural Culture of Century-old Historic Sites')">The Architectural Culture of Century-old Historic Sites</button>
+                onclick="focusTour('剝皮寮懷舊之旅_en.csv','#FF0000', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', 'The Architectural Culture of Century-old Historic Sites', 'https://www.travel.taipei/en/fun/tour/details/1286')">The
+                Architectural Culture of Century-old Historic Sites</button>
             <button style="color: #008000"
-                onclick="loadTour('水道水源地之旅_en.csv', '#008000', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png', 'The Story of Tap Water')">The Story of Tap Water</button>
+                onclick="focusTour('水道水源地之旅_en.csv', '#008000', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png', 'The Story of Tap Water', 'https://www.travel.taipei/en/fun/tour/details/1288')">The
+                Story of Tap Water</button>
             <button style="color: #0000FF"
-                onclick="loadTour('踏青一日遊_en.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', 'Tranquil Maokong: A Day of Nature Walks')">Tranquil Maokong: A Day of Nature Walks</button>
+                onclick="focusTour('踏青一日遊_en.csv', '#0000FF', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', 'Tranquil Maokong: A Day of Nature Walks', 'https://www.travel.taipei/en/fun/tour/details/1287')">Tranquil
+                Maokong: A Day of Nature Walks</button>
             <button style="color: #FFA500"
-                onclick="loadTour('穿越時光_en.csv', '#FFA500', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png', 'Passing Through the Time: An Exploration Journey of Taipei City')">Passing Through the Time: An Exploration Journey of Taipei City</button>
+                onclick="focusTour('穿越時光_en.csv', '#FFA500', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png', 'Passing Through the Time: An Exploration Journey of Taipei City', 'https://www.travel.taipei/en/fun/tour/details/1284')">Passing
+                Through the Time: An Exploration Journey of Taipei City</button>
             <button style="color: #a600ff"
-                onclick="loadTour('紓壓放鬆輕旅行_en.csv', '#a600ff', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png', 'A Relaxing Stress-Relief Getaway')">A Relaxing Stress-Relief Getaway</button>
+                onclick="focusTour('紓壓放鬆輕旅行_en.csv', '#a600ff', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png', 'A Relaxing Stress-Relief Getaway', 'https://www.travel.taipei/en/fun/tour/details/1283')">A
+                Relaxing Stress-Relief Getaway</button>
         </div>
         <div id="map"></div>
         <div id="tour-info"></div>
@@ -117,9 +124,9 @@
 
     <script>
         let map;
-        let markers = []; 
-        let polylinePaths = []; 
-        let infoWindows = []; 
+        let markers = [];
+        let polylinePaths = [];
+        let infoWindows = [];
         let districts = new Set();
 
         function initMap() {
@@ -154,14 +161,14 @@
                             header: true,
                             dynamicTyping: true,
                             complete: function (results) {
-                                plotLocations(results.data, tour.color, tour.icon);
+                                plotLocations(results.data, tour.color, tour.icon, false);
                             }
                         });
                     });
             });
         }
 
-        function loadTour(csvFile, polylineColor, markerIcon, tourName) {
+        function focusTour(csvFile, polylineColor, markerIcon, tourName, tourUrl) {
             document.getElementById('tour-info').style.display = 'flex';
             document.getElementById('tour-info').innerHTML = `<h2>${tourName} (Tour Color：<span style='color:${polylineColor}'>${getColorName(polylineColor)}</span>)</h2>`;
             districts.clear();
@@ -186,10 +193,9 @@
                 case '#0000FF': return 'Blue';
                 case '#FFA500': return 'Yellow';
                 case '#a600ff': return 'Purple';
-                default: return 'Null';
+                default: return 'Unknown';
             }
         }
-
         function plotLocations(data, polylineColor, markerIcon, setMapCenter = false) {
             data = data.filter(entry => entry && entry['景點名稱']);
 
@@ -206,6 +212,7 @@
                         let spotName = location['景點名稱'];
                         let spotUrl = location['網址'];
                         let district = location['行政區'] || '';
+
 
                         if (district) districts.add(district);
 
@@ -241,7 +248,6 @@
         }
 
         function addMarker(position, markerIcon, id, spotName, address, spotUrl, index, district) {
-            const markerLabel = `${id}`;
             const marker = new google.maps.Marker({
                 position: position,
                 map: map,
@@ -253,17 +259,9 @@
                     fontSize: "18px",
                     fontWeight: "bold",
                     className: 'marker-label-black-border'
-                }
+                },
+                animation: google.maps.Animation.BOUNCE
             });
-
-            if (index === 0 || index === 1) {
-                const enlargedIcon = {
-                    url: markerIcon,
-                    scaledSize: new google.maps.Size(50, 50)
-                };
-                marker.setIcon(enlargedIcon);
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-            }
 
             markers.push(marker);
 
@@ -295,7 +293,7 @@
             let tourInfoDiv = document.getElementById('tour-info');
             let districtsArray = Array.from(districts);
             let districtInfo = document.createElement('div');
-            districtInfo.innerHTML = `<strong>District：</strong> ${districtsArray.join('、')}`;
+            districtInfo.innerHTML = `<strong>District：</strong> ${districtsArray.join(', ')}`;
             tourInfoDiv.appendChild(districtInfo);
         }
 
