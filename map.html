@@ -154,7 +154,7 @@
                             header: true,
                             dynamicTyping: true,
                             complete: function (results) {
-                                plotLocations(results.data, tour.color, tour.icon);
+                                plotLocations(results.data, tour.color, tour.icon, false);
                             }
                         });
                     });
@@ -241,7 +241,6 @@
         }
 
         function addMarker(position, markerIcon, id, spotName, address, spotUrl, index, district) {
-            const markerLabel = `${id}`;
             const marker = new google.maps.Marker({
                 position: position,
                 map: map,
@@ -253,17 +252,9 @@
                     fontSize: "18px",
                     fontWeight: "bold",
                     className: 'marker-label-black-border'
-                }
+                },
+                animation: google.maps.Animation.BOUNCE
             });
-
-            if (index === 0 || index === 1) {
-                const enlargedIcon = {
-                    url: markerIcon,
-                    scaledSize: new google.maps.Size(50, 50)
-                };
-                marker.setIcon(enlargedIcon);
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-            }
 
             markers.push(marker);
 
